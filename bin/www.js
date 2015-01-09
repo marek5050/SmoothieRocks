@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 var debug = require('debug')('SmoothieRocks');
 var app = require('../app');
 
