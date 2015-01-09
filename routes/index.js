@@ -2,6 +2,14 @@ var express = require('express');
 var router = express.Router();
 var dockie = require("../bin/dockie.js");
 
+var winston = require('winston');
+
+var log = new (winston.Logger)({
+    transports: [
+        new (winston.transports.File)({ filename: './logs/index.log', level:'info', timestamp:true, json:true })
+    ]
+});
+
 var Dockerfile =  (require("../bin/schemas.js")).dockerfile;
 var UATokens   =  (require("../bin/schemas.js")).uatokens;
 var User       =  (require("../bin/schemas.js")).user;
@@ -17,14 +25,14 @@ passport.use(new FacebookStrategy({
       callbackURL: "http://"+ FACEBOOK_HOST + "/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done) {
-        console.log("accessToken: ", accessToken);
-        console.log("refreshToken: ", refreshToken);
-        console.log("profile: ", profile.emails[0].value);
-        console.log("done: ", done);
+        log.info("accessToken: ", accessToken);
+        log.info("refreshToken: ", refreshToken);
+        log.info("profile: ", profile.emails[0].value);
+        log.info("done: ", done);
 
 
         User.findOrCreate( { email: profile.emails[0].value } , function(err, user) {
-            //console.log("FOUND USER: ", user);
+            //log.info("FOUND USER: ", user);
         if (err) { return done(err); }
         done(null, user);
       });
@@ -69,12 +77,12 @@ router.get("/login", function(req,res){
 });
 
 router.get("/api/list", ensureAuthenticated, function(req,res){
-    console.log("/api/list: ", req.user._id);
+    log.info("/api/list: ", req.user._id);
 
     User.findById(req.user._id, function(err, user ){
 
         if(err)
-            console.log("Error finding User: ", req.user.id) ;
+            log.info("Error finding User: ", req.user.id) ;
         else if(!user){
             res.redirect("/login");
             return;
@@ -87,9 +95,9 @@ router.get("/api/list", ensureAuthenticated, function(req,res){
 
         Dockerfile.find({_id: {$in: user.dockerFiles}},function(err, items){
             if(err){
-                console.log("Error with Dockerfiles: ", err);
+                log.info("Error with Dockerfiles: ", err);
             }else{
-                //console.log("Found dockerfiles: " , items);
+                //log.info("Found dockerfiles: " , items);
             }
             //user = user.toObject();
             //user.items = items;
@@ -114,7 +122,7 @@ router.get('/agency.html', function(req, res) {
 });
 
 router.get('/api/remove',ensureAuthenticated, function(req,res) {
-    console.log("api.remove");
+    log.info("api.remove");
     //var vhost = req.query.subdomain;
     var _id = req.query._id;
 
@@ -124,13 +132,13 @@ router.get('/api/remove',ensureAuthenticated, function(req,res) {
 
      function _call(){
          user.save(function(err,user){
-                if(err) {console.log("Error saving user" );}
+                if(err) {log.info("Error saving user" );}
          });
 
          Dockerfile.findOneAndRemove({_id: _id},function(err){
 
              if(err){
-                 console.log("ERROR: " +  err);
+                 log.info("ERROR: " +  err);
                  res.send("err");
              }  else{
                  res.send("ok");
@@ -138,17 +146,17 @@ router.get('/api/remove',ensureAuthenticated, function(req,res) {
           });
         }
 
-        if(err ) console.log("ERROR: " + err);
+        if(err ) log.info("ERROR: " + err);
 
-        //console.log(user);
+        //log.info(user);
 
         var idx = user.dockerFiles.indexOf(_id);
 
-        console.log(user.dockerFiles.length);
+        log.info(user.dockerFiles.length);
 
         if(idx!= -1) user.dockerFiles.splice(idx,1);
 
-        console.log(user.dockerFiles.length);
+        log.info(user.dockerFiles.length);
 
         dockie.stopDockfile(_id, _call);
 
@@ -159,13 +167,13 @@ router.get('/api/remove',ensureAuthenticated, function(req,res) {
 });
 
 router.get('/api/start',ensureAuthenticated, function(req,res){
-    console.log("api.start", req.query.subdomain,req.query.service,req.query.opts);
+    log.info("api.start", req.query.subdomain,req.query.service,req.query.opts);
 
 
     function _call(err,stdout,stderr){
         if(err!=null) {
-            console.log("Error2: " + err);
-            console.log("STDERR2: " + stderr);
+            log.info("Error2: " + err);
+            log.info("STDERR2: " + stderr);
         }
 
         var img  = new Dockerfile();
@@ -174,25 +182,25 @@ router.get('/api/start',ensureAuthenticated, function(req,res){
         img.opts = req.query.opts;
         img._id = stdout.substring(stdout.indexOf("\n")+1).trim();
 
-        console.log("Got img: " , img);
+        log.info("Got img: " , img);
 
         User.findById(req.user._id, function(_err, _user) {
                 if (_err) {
-                    console.log("ERROR: " + _err);
+                    log.info("ERROR: " + _err);
                 } else {
-                    console.log("Found: " + _user);
+                    log.info("Found: " + _user);
 
                     if (undefined == _user.dockerFiles) _user.dockerFiles = [];
 
 
                     img.save(function(err,item){
                         if(err) {
-                            console.log("There was a problem saving");
+                            log.info("There was a problem saving");
                         }
-                            console.log("ITEM: ", item);
+                            log.info("ITEM: ", item);
                             _user.dockerFiles.push(item.id);
                             _user.save(function (err) {
-                            console.log("ERROR SAVING: ", err);
+                            log.info("ERROR SAVING: ", err);
                             });
                     })
 
@@ -210,14 +218,14 @@ router.get('/api/start',ensureAuthenticated, function(req,res){
 });
 
 router.get('/api/stop',ensureAuthenticated, function(req,res){
-    console.log("api.stop: ", req.query.vhost);
+    log.info("api.stop: ", req.query.vhost);
 
     var status =   dockie.stopDockfile(req.query.vhost);
     res.render('index', {title: status});
 });
 
 router.get('/api/status',ensureAuthenticated, function(req,res){
-    console.log("api.status ");
+    log.info("api.status ");
 
     var status =   dockie.status();
     res.render('index', {title: status});
