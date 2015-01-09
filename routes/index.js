@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var dockie = require("../bin/dockie.js");
 
+var HOST = process.env.HOST;
+
 var winston = require('winston');
 
 var log = new (winston.Logger)({
@@ -18,11 +20,11 @@ var passport = require('passport')
     , FacebookStrategy = require('passport-facebook').Strategy;
 var FACEBOOK_APP_ID = "298638103625812";
 var FACEBOOK_APP_SECRET = "cb11debfcb20bf0b88ebce48e94e652e";
-var FACEBOOK_HOST = process.env.HOST || "localhost:8000";
+var FACEBOOK_HOST = HOST || "localhost:8000";
 passport.use(new FacebookStrategy({
       clientID: FACEBOOK_APP_ID,
       clientSecret: FACEBOOK_APP_SECRET,
-      callbackURL: "http://"+ FACEBOOK_HOST + "/auth/facebook/callback"
+      callbackURL: "http://"+ HOST + "/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done) {
         log.info("accessToken: ", accessToken);
@@ -33,8 +35,11 @@ passport.use(new FacebookStrategy({
 
         User.findOrCreate( { email: profile.emails[0].value } , function(err, user) {
             //log.info("FOUND USER: ", user);
-        if (err) { return done(err); }
-        done(null, user);
+        if (err) {
+            return done(err);
+        }else{
+            return done(null, user);
+        }
       });
     }
 ));

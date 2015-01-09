@@ -103,7 +103,11 @@ function containerManagerViewModel(_parent){
 
         $.get("/api/list", function(containers){
             console.log("Received profile: ", containers);
-            self.containers(containers);
+            if(typeof containers == "string"){
+                console.log("Could not fetch containers");
+            }else{
+                self.containers(containers);
+            }
         })
     };
 

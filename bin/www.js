@@ -1,6 +1,7 @@
+process.env.HOST = "localhost:8000";
+
 var debug = require('debug')('SmoothieRocks');
 var app = require('../app');
-
 
 app.set('port', process.env.PORT || 8000);
 app.set('host', "smoothie.dev");
