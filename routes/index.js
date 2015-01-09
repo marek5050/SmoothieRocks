@@ -10,11 +10,11 @@ var passport = require('passport')
     , FacebookStrategy = require('passport-facebook').Strategy;
 var FACEBOOK_APP_ID = "298638103625812";
 var FACEBOOK_APP_SECRET = "cb11debfcb20bf0b88ebce48e94e652e";
-
+var FACEBOOK_HOST = process.env.HOST || "localhost:8000";
 passport.use(new FacebookStrategy({
       clientID: FACEBOOK_APP_ID,
       clientSecret: FACEBOOK_APP_SECRET,
-      callbackURL: "http://localhost:3000/auth/facebook/callback"
+      callbackURL: "http://"+ FACEBOOK_HOST + "/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done) {
         console.log("accessToken: ", accessToken);
@@ -24,7 +24,7 @@ passport.use(new FacebookStrategy({
 
 
         User.findOrCreate( { email: profile.emails[0].value } , function(err, user) {
-            console.log("FOUND USER: ", user);
+            //console.log("FOUND USER: ", user);
         if (err) { return done(err); }
         done(null, user);
       });
@@ -68,13 +68,17 @@ router.get("/login", function(req,res){
    res.render("login");
 });
 
-router.get("/api/user", ensureAuthenticated, function(req,res){
-    console.log("/api/user: ", req.user._id);
+router.get("/api/list", ensureAuthenticated, function(req,res){
+    console.log("/api/list: ", req.user._id);
 
     User.findById(req.user._id, function(err, user ){
 
         if(err)
             console.log("Error finding User: ", req.user.id) ;
+        else if(!user){
+            res.redirect("/login");
+            return;
+        }
 
         if("undefined"  == typeof user.dockerFiles ){
             res.send(user);
@@ -85,14 +89,13 @@ router.get("/api/user", ensureAuthenticated, function(req,res){
             if(err){
                 console.log("Error with Dockerfiles: ", err);
             }else{
-                console.log("Found dockerfiles: " , items);
+                //console.log("Found dockerfiles: " , items);
             }
-            user = user.toObject();
-            user.items = items;
-            delete user.dockerFiles;
-            console.log("SENDING: ", user);
+            //user = user.toObject();
+            //user.items = items;
+            //delete user.dockerFiles;
 
-            res.send(user);
+            res.send(items);
         })
     })
 })
@@ -111,14 +114,52 @@ router.get('/agency.html', function(req, res) {
 });
 
 router.get('/api/remove',ensureAuthenticated, function(req,res) {
+    console.log("api.remove");
+    //var vhost = req.query.subdomain;
+    var _id = req.query._id;
+
+
+    User.findById(req.user._id, function(err, user){
+
+
+     function _call(){
+         user.save(function(err,user){
+                if(err) {console.log("Error saving user" );}
+         });
+
+         Dockerfile.findOneAndRemove({_id: _id},function(err){
+
+             if(err){
+                 console.log("ERROR: " +  err);
+                 res.send("err");
+             }  else{
+                 res.send("ok");
+             }
+          });
+        }
+
+        if(err ) console.log("ERROR: " + err);
+
+        //console.log(user);
+
+        var idx = user.dockerFiles.indexOf(_id);
+
+        console.log(user.dockerFiles.length);
+
+        if(idx!= -1) user.dockerFiles.splice(idx,1);
+
+        console.log(user.dockerFiles.length);
+
+        dockie.stopDockfile(_id, _call);
+
+    });
+
+
 
 });
 
 router.get('/api/start',ensureAuthenticated, function(req,res){
-
     console.log("api.start", req.query.subdomain,req.query.service,req.query.opts);
-    //http://localhost:3000/api/run?vhost=alpha&dockerfile=tutum/wordpress&opts=
-    //req.query.docker = "mbejda/wordpress-wpcli-plugins";
 
 
     function _call(err,stdout,stderr){
@@ -133,6 +174,7 @@ router.get('/api/start',ensureAuthenticated, function(req,res){
         img.opts = req.query.opts;
         img._id = stdout.substring(stdout.indexOf("\n")+1).trim();
 
+        console.log("Got img: " , img);
 
         User.findById(req.user._id, function(_err, _user) {
                 if (_err) {
@@ -154,18 +196,15 @@ router.get('/api/start',ensureAuthenticated, function(req,res){
                             });
                     })
 
-                    console.log("DockerFile: ", _user.dockerFiles);
-
             }})
+    };
 
-        console.log(img);
+    var env1 = "\"-e PLUGINS='$PLUGINS'\"";
+    env1 = env1.replace("$PLUGINS",req.query.opts.join(";"));
+    var vhost = req.query.subdomain +"."+ HOST;
+    var docker = req.query.service;
 
-        console.log("STDOUT: "  + stdout);
-        console.log("stderr2: " + stderr);
-      };
-
-
-    dockie.startDockfile(req.query.subdomain, req.query.service, _call);
+    dockie.startDockfile(vhost,docker, env1,  _call);
 
     res.send("working..");
 });

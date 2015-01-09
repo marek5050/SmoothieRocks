@@ -1,5 +1,7 @@
-VHOST:=demo
-DOCKFILE:=tutum/wordpress
+VHOST:=demo.smoothie.rocks
+DOCKFILE:=mbejda/wordpress-wpcli-plugins
+OPTS:=
+_ID:=
 
 default: 
 
@@ -15,11 +17,11 @@ start_proxy:
 
 
 start_dockfile:
-	docker run  -d -e "VIRTUAL_HOST=$(VHOST).smoothie.dev" -t $(DOCKFILE)
+	docker run  -d -e "VIRTUAL_HOST=$(VHOST)" -e "SITEURL=$(VHOST)" $(OPTS) -t $(DOCKFILE)
 
 
 stop_dockfile:
-	docker kill $(VHOST)
+	docker kill $(_ID)
 
 
 status:

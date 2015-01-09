@@ -24,6 +24,7 @@ var app = express();
 mongoose.set('debug',false);
 mongoose.connect('localhost','Smoothie');
 
+var HOST = app.get("host");
 
 
 // view engine setup

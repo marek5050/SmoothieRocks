@@ -342,34 +342,37 @@
 
         <div id="content" class="col-lg-10 col-sm-11">
 
-              <div class="row">
-              <div class="col-lg-12">
-                  <div class="box">
+            <add_container_form  param="parent:s"></add_container_form>
 
+           <template  id="add_container_form_template">
+             <div class="row">
+             <div class="col-lg-12">
+                  <div class="box">
                       <div class="box-header" data-original-title="">
                           <h2><i class="fa fa-user"></i><span class="break"></span>Add Service</h2>
+
                           <div class="box-icon">
                               <a href="#">
-                                  <button type="button" class="btn btn-success btn-next" data-bind="click:addServiceShow">
+                                  <button type="button" class="btn btn-success btn-next" data-bind="click: addServiceShow">
                                       New Service
                                   </button>
                               </a>
 
                               <a href="#" class="btn-save">
-                                  <button type="button" class="btn btn-success btn-next" data-bind="click: $root.addService"> Save </button>
+                                  <button type="button" class="btn btn-success btn-next" data-bind="click: saveService"> Save </button>
                               </a>
                           </div>
                       </div>
-                    <div class="box-content" style="min-height:120px" data-bind="visible: $root.newService.visible">
+                    <div class="box-content" style="min-height:120px" data-bind="visible: visible">
                             <div class="form-group">
                                 <label class="control-label" for="appendedInput">Appended text</label>
                                 <div class="controls">
 
                                     <div class="input-group">
-                                             <span class="input-group-addon" data-bind="css:{red: !$root.newService.subvalid(), green: newService.subvalid() }">
-                                                    <i class="fa"  data-bind="css:{'fa-times-circle': !$root.newService.subvalid(), 'fa-check-circle': newService.subvalid() }" ></i>
-                                                </span>
-                                        <input id="appendedInput" class="form-control" size="16" type="text" name="subdomain" data-bind="value:newService.subdomain">
+                                             <span class="input-group-addon" data-bind="css:{red: !subvalid(), green: subvalid() }">
+                                                    <i class="fa"  data-bind="css:{'fa-times-circle': !subvalid(), 'fa-check-circle': subvalid() }" ></i>
+                                              </span>
+                                        <input id="appendedInput" class="form-control" size="16" type="text" name="subdomain" data-bind="value:subdomain">
                                         <span class="input-group-addon">.smoothie.rocks</span>
                                     </div>
                                     <span class="help-block">Where to access the default site or service. NO SPACES OR SPECIAL CHARACTERS</span>
@@ -381,9 +384,10 @@
                         <div class="col-md-4">
                         <div class="preview-pane">
 
-                        <a data-bind="click:$root.selectService">
-                            <img data-bind="attr:{'src' : imagename(service.name) }" class="img-responsive img-centered" alt="" />
-                        </a>
+                            <a data-bind="click: $parent.selectService">
+                                <img data-bind="attr:{'src' : imagename(service.name) }" class="img-responsive img-centered" alt="" />
+                            </a>
+
                         </div>
                         </div>
                          </div>
@@ -392,8 +396,8 @@
                             <label class="control-label">Options</label>
                             <div class="controls" data-bind="foreach: { data: options, as:'option' }">
                                 <label class="checkbox inline">
-                                    <input type="checkbox" id="inlineCheckbox1" data-bind="attr:{value: option.install},checked:$root.newService.opts">
-                                    <span data-bind="text:$data.name" ></span>
+                                    <input type="checkbox" id="inlineCheckbox1" data-bind="attr:{value: option.install},checked: $parent.opts">
+                                    <span data-bind="text: option.name" ></span>
                                 </label>
                             </div>
                         </div>
@@ -402,8 +406,12 @@
                         </div>
                     </div>
                   </div>
+</template>
 
+<container_manager param="parent:s"></container_manager>
 
+<template id="container_manager_template">
+<div class="row">
     <div class="col-lg-12">
         <div class="box">
             <div class="box-header" data-original-title="">
@@ -434,19 +442,19 @@
                                 <th role="columnheader">Actions</th>
                             </tr>
                             </thead>
-                            <tbody role="alert" aria-live="polite" aria-relevant="all" data-bind="foreach: {data: user().items, as:'item'} ">
+                            <tbody role="alert" aria-live="polite" aria-relevant="all" data-bind="foreach: {data: containers, as:'item'} ">
                             <tr  aria-live="polite" aria-relevant="all" >
                                 <td data-bind="text: subdomainname(item.subdomain)"></td>
                                 <td data-bind="text: item.service"></td>
                                 <td data-bind="text: item.opts"></td>
                                 <td class="center ">
-                                    <a class="btn btn-success">
+                                    <a class="btn btn-success" data-bind="attr:{href: 'http://'+subdomainname(item.subdomain)}" target="_blank">
                                         <i class="fa fa-search-plus "></i>
                                     </a>
                                     <a class="btn btn-info">
                                         <i class="fa fa-edit "></i>
                                     </a>
-                                    <a class="btn btn-danger" data-bind="click:$root.trashService">
+                                    <a class="btn btn-danger" data-bind="click:$parent.trashService">
                                         <i class="fa fa-trash-o "></i>
                                     </a>
                                 </td>
@@ -460,8 +468,10 @@
             </div>
         </div>
     </div>
- </div>
-</div>
+    </template>
+
+        </div>
+    </div>
 </div>
 
 
@@ -523,9 +533,23 @@
 <!-- end: JavaScript-->
 </body>
 <script>
+
     $(document).ready(function(){
 
-        ko.applyBindings(new Smoothie());
+        var s = new Smoothie();
+
+        ko.components.register("add_container_form", {
+            viewModel: {instance: s.addContainerManager},
+            template:  { element: "add_container_form_template"}
+        });
+
+        ko.components.register("container_manager", {
+            viewModel: {instance: s.containerManager},
+            template:  { element: "container_manager_template"}
+        });
+
+        ko.applyBindings();
+
     });
 </script>
 

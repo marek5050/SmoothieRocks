@@ -6,43 +6,36 @@ var exec = require('child_process').exec;
 var subDomains = ["alpha","beta","charlie","one","two","three","four"];
 
 
-
 exports.getSub = function(){
     return subDomains[Math.floor(Math.random()*subDomains.length)];
 }
 
-exports.startDockfile = function(vhost, dockfile, _call){
+exports.startDockfile = function(vhost, dockfile,env1, _call){
 
-    //docker run  -e "VIRTUAL_HOST=a.dockerhost.com" -t tutum/wordpress
-    //var fullhost = "\"VIRTUAL_HOST="+vhost+".dockerhost.com\"";
-    //var exec_string = "docker run  -d -e \"VIRTUAL_HOST=%vhost.dockerhost.com\" -t tutum/wordpress";
-    //exec_string = exec_string.replace("%vhost", vhost);
+    console.log("startDockfile: " , vhost, dockfile );
 
-    console.log("startDockfile: " , vhost, dockfile);
-
-    var exec_string = "make start_dockfile VHOST=$VHOST DOCKFILE=$DOCKFILE";
+    var exec_string = "make start_dockfile VHOST=$VHOST DOCKFILE=$DOCKFILE OPTS=$ENV";
     exec_string=exec_string.replace("$VHOST", vhost);
     exec_string=exec_string.replace("$DOCKFILE", dockfile);
-    //var child = run('tutum/wordpress', {tty:true})
+    exec_string=exec_string.replace("$ENV", env1);
 
+    console.log("EXEC_STRING: "  + exec_string);
     var child = exec(exec_string, _call);
 
     return child;
 }
 
-exports.stopDockfile = function(vhost){
+exports.stopDockfile = function(_id, _call){
 
-    console.log("stopDockfile: " + vhost);
+    console.log("stopDockfile: " + _id);
 
-    var child = exec("$(boot2docker shellinit); make stop_dockfile VHOST="+vhost, function(err,stdout,stderr){
+    var child = exec("make stop_dockfile _ID="+_id, function(err,stdout,stderr){
         console.log("stdout2: " + stdout);
-        console.log("stderr2: " + stderr);
         if(err!=null){
             console.log("Error2: " + err);
         }
+        _call();
     });
-
-
     return child;
 
 }

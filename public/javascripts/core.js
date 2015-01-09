@@ -10,120 +10,123 @@ var wordpressPlugins = [
 ]
 
 var items = [
-    {name: "wordpress", docker: "tutum/wordpress" , opts: wordpressPlugins }
-    , {name: "redis", docker: "tutum/wordpress" , opts: [] }
-    , {name: "mongodb", docker: "tutum/wordpress" ,opts: [] }
+    {name: "wordpress", docker: "mbejda/wordpress-wpcli-plugins" , opts: wordpressPlugins }
+    , {name: "redis", docker: "mbejda/wordpress-wpcli-plugins" , opts: [] }
+    , {name: "mongodb", docker: "mbejda/wordpress-wpcli-plugins" ,opts: [] }
 ];
 
-
-var _user = {
-    items: [
-            {subdomain: "hello", docker: "tutum/wordpress", opts: "woocommerce"},
-            {subdomain: "hello1", docker: "tutum/wordpress", opts: "woocommerce"},
-            {subdomain: "hello2", docker: "tutum/wordpress", opts: "woocommerce"}
-        ]
-};
-
 var blank = {
-    items:[]
+    name:"",
+    docker:"",
+    opts:[]
+}
+
+
+function addContainerViewModel(_parent){
+    console.log("initialized addContainerViewModel");
+
+    var self = this;
+    self.parent = _parent;
+
+    self.services = ko.observableArray(items);
+    self.options = ko.observableArray("");
+    self.service = ko.observable("");
+
+
+    self.subdomain = ko.observable("");
+    self.opts =ko.observableArray([]);
+
+    self.visible = ko.observable(false);
+
+
+    self.subvalid = ko.computed(function(){
+        //console.log(self, self.subdomain());
+        if("undefined" == typeof self) return 0;
+        return  /^[a-z0-9]+$/i.test( self.subdomain());
+    },self);
+
+    self.valid =  ko.computed(function(){
+        return self.subvalid() == true && self.service()!="";
+    });
+
+    self.selectService = function(item){
+        console.log("selectService", item, self);
+
+        self.service(item.docker);
+        self.options(item.opts);
     }
 
-ko.extenders.alphanumeric = function(target, precision) {
-    //create a writable computed observable to intercept writes to our observable
-    var result = ko.pureComputed({
-        read: target,  //always return the original observables value
-        write: function(newValue) {
-            console.log("Write called" );
-            var current = target(),
-                valid =  /^[a-z0-9]+$/i.test( newValue),
-                valueToWrite = (valid)? newValue: "";
+    self.addServiceShow = function(){
+        console.log("addServiceShow");
 
-            console.log("Valid: " + valid + " New value: " +  newValue);
-            //only write if it changed
-            if (valueToWrite !== current) {
-                target(valueToWrite);
-            } else {
-                //if the rounded value is the same, but a different value was written, force a notification for the current field
-                if (newValue !== current) {
-                    target.notifySubscribers(valueToWrite);
-                }
+        self.visible(!self.visible());
+    }
+
+
+    self.saveService = function(){
+        console.log("addService", this, this.valid());
+
+        if(!self.valid()){
+            return false;
+        }else{
+            var serial = {
+                subdomain: self.subdomain(),
+                opts: self.opts(),
+                service: self.service()
             }
+
+            $.get("/api/start", serial, function(response){
+                if(response === "ok") alert("Service Added");
+                else alert(response);
+
+                self.selectService(blank);
+                self.subdomain("");
+                self.parent.refresh();
+            })
         }
-    }).extend({ notify: 'always' });
+    };
+}
 
-    //initialize with current value to make sure it is rounded appropriately
-    result(target());
 
-    //return the new computed observable
-    return result;
-};
 
+
+function containerManagerViewModel(_parent){
+    console.log("initializing containerManager");
+
+    var self = this;
+    var parent = _parent;
+
+    self.containers = ko.observableArray([]);
+
+    self.fetchContainers = function(){
+        console.log("fetchContainers");
+
+        $.get("/api/list", function(containers){
+            console.log("Received profile: ", containers);
+            self.containers(containers);
+        })
+    };
+
+
+    self.trashService = function(item){
+        $.ajax({url: "/api/remove", type: "GET" ,data:{_id: item._id}, success: function(response) {
+            if(response == "ok"){
+                self.fetchContainers();
+            }
+            console.log(response);
+        }})
+    }
+}
 
 function Smoothie(){
     var self = this;
     self.name= "Smoothie.Rocks";
-    self.newService = {};
-    self.newService.visible = ko.observable(false);
-    self.newService.subdomain = ko.observable("");
-    self.newService.service = ko.observable("");
-    self.newService.opts =ko.observableArray([]);
-    self.newService.subvalid = ko.computed(function(){
-            if("undefined" == typeof self.newService) return 0;
-            return  /^[a-z0-9]+$/i.test( self.newService.subdomain());
-        },self);
-    self.newService.valid =  ko.computed(function(){
+    self.addContainerManager = new addContainerViewModel(self);
+    self.containerManager = new containerManagerViewModel(self);
 
-            return self.newService.subvalid() == true && self.newService.service()!="";
-
-    })
-    self.addServiceShow = function(){
-        console.log(self.newService.visible());
-        self.newService.visible(!self.newService.visible());
+    self.refresh = function(){
+        self.containerManager.fetchContainers();
     }
-    self.services = ko.observableArray(items);
-    self.options = ko.observableArray();
 
-    self.user = ko.observable(blank);
-    self.fetchContainers = function(){
-        console.log("Get containers");
-
-        $.get("/api/user", function(profile){
-            //console.log(response);
-            self.user(profile);
-        })
-    };
-    self.addService = function(){
-        console.log("New Service", self.newService, self.newService.valid());
-        if(!self.newService.valid()){
-            return false;
-        }else{
-            var serial = self.newService;
-            delete serial.valid;
-            delete serial.subvalid;
-
-            var plainJs = ko.toJS(serial);
-            console.log("PlainJS : ",  plainJs);
-
-            $.get("/api/start", plainJs, function(response){
-                alert("Service Added");
-                self.services([]);
-                self.options([]);
-                self.fetchContainers();
-            })
-        }
-    };
-
-    self.selectService = function(item){
-        console.log("Selecting New Service", item);
-        self.newService.service(item.docker);
-        self.options(item.opts);
-    };
-
-    self.trashService = function(item){
-        $.ajax({url: "/api/remove", type: "GET" ,data:item, success: function(response) {
-            console.log(response);
-        }})
-     }
-
-    self.fetchContainers();
+    self.refresh();
 }
