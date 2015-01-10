@@ -3,15 +3,22 @@
  */
 
 var exec = require('child_process').exec;
+var winston = require('winston');
+
 var subDomains = ["alpha","beta","charlie","one","two","three","four"];
 
+var log = new (winston.Logger)({
+    transports: [
+        new (winston.transports.File)({ filename: __dirname + "/../logs/dockers.log", level:'info', timestamp:true, json:true })
+    ]
+});
 
 exports.getSub = function(){
     return subDomains[Math.floor(Math.random()*subDomains.length)];
 }
 
-exports.startDockfile = function(vhost, dockfile,env1, _call){
 
+exports.startDockfile = function(vhost, dockfile,env1, _call){
     console.log("startDockfile: " , vhost, dockfile );
 
     var exec_string = "make start_dockfile VHOST=$VHOST DOCKFILE=$DOCKFILE OPTS=$ENV";
@@ -20,7 +27,13 @@ exports.startDockfile = function(vhost, dockfile,env1, _call){
     exec_string=exec_string.replace("$ENV", env1);
 
     console.log("EXEC_STRING: "  + exec_string);
-    var child = exec(exec_string, _call);
+
+    function stream(err1,err2,stdout){
+        log.info([exec_string,err1,err2,stdout]);
+        _call(err1,err2,stdout);
+    }
+
+    var child = exec(exec_string, stream);
 
     return child;
 }
