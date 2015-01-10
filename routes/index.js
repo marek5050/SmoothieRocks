@@ -30,10 +30,10 @@ passport.use(new FacebookStrategy({
       callbackURL: "http://"+ HOST + "/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done) {
-        log.info("accessToken: ", accessToken);
-        log.info("refreshToken: ", refreshToken);
-        log.info("profile: ", profile.emails[0].value);
-        log.info("done: ", done);
+        //log.info("accessToken: ", accessToken);
+        //log.info("refreshToken: ", refreshToken);
+        //log.info("profile: ", profile.emails[0].value);
+        //log.info("done: ", done);
 
         User.findOrCreate( { email: profile.emails[0].value } , function(err, user) {
             //log.info("FOUND USER: ", user);
