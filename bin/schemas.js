@@ -14,6 +14,7 @@ var UATokensSchema = new Schema({
 var dockerFileSchema = new Schema({
     _id: String,
     subdomain: String,
+    domain: String,
     service: String,
     opts: String
 });

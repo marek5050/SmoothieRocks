@@ -342,7 +342,43 @@
 
         <div id="content" class="col-lg-10 col-sm-11">
 
-            <add_container_form  param="parent:s"></add_container_form>
+
+
+
+
+
+
+            <dns_manager></dns_manager>
+
+
+            <template  id="dns_manager_template">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="box">
+                            <div class="box-header" data-original-title="">
+                                <h2><i class="fa fa-user"></i><span class="break"></span>DNS Manager</h2>
+
+                                <div class="box-icon">
+                                    <a href="#" class="btn-save">
+                                        <button type="button" class="btn btn-success btn-next"> Save </button>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="box-content" style="min-height:120px" data-bind="visible: visible">
+<div class="col-sm-4">
+    <ul>
+        <li>Point your sites A Name DNS to 104.236.102.244</li>
+        <li></li>
+    </ul>
+</div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+
+
+          <add_container_form > </add_container_form>
 
            <template  id="add_container_form_template">
              <div class="row">
@@ -408,14 +444,14 @@
                   </div>
 </template>
 
-<container_manager param="parent:s"></container_manager>
+<container_manager ></container_manager>
 
 <template id="container_manager_template">
 <div class="row">
     <div class="col-lg-12">
         <div class="box">
             <div class="box-header" data-original-title="">
-                <h2><i class="fa fa-user"></i><span class="break"></span>Members</h2>
+                <h2><i class="fa fa-user"></i><span class="break"></span>Services</h2>
                 <div class="box-icon">
                     <a href="#" class="btn-setting"><i class="fa fa-wrench"></i></a>
                     <a href="#" class="btn-minimize"><i class="fa fa-chevron-up"></i></a>
@@ -546,6 +582,11 @@
         ko.components.register("container_manager", {
             viewModel: {instance: s.containerManager},
             template:  { element: "container_manager_template"}
+        });
+
+        ko.components.register("dns_manager", {
+            viewModel: {instance: s.dnsManager},
+            template:  { element: "dns_manager_template"}
         });
 
         ko.applyBindings();

@@ -5,7 +5,6 @@ _ID:=
 
 default:
 	@echo Start node server
-	node ./bin/www.js  -e HOST="smoothie.rocks"
 
 kill_all:
 	docker kill $(docker ps -q)
@@ -28,6 +27,3 @@ stop_dockfile:
 
 status:
 	docker ps
-
-config:
-	boot2docker shellinit

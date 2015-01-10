@@ -27,7 +27,7 @@ var FACEBOOK_HOST = HOST || "localhost:8000";
 passport.use(new FacebookStrategy({
       clientID: FACEBOOK_APP_ID,
       clientSecret: FACEBOOK_APP_SECRET,
-      callbackURL: "http://"+ HOST + "/auth/facebook/callback"
+      callbackURL: "http://"+ FACEBOOK_HOST + "/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done) {
         //log.info("accessToken: ", accessToken);
@@ -180,8 +180,8 @@ router.get('/api/remove',ensureAuthenticated, function(req,res) {
 
 });
 
-router.get('/api/start',ensureAuthenticated, function(req,res){
-    log.info("api.start", req.query.subdomain,req.query.service,req.query.opts);
+router.get('/api/create',ensureAuthenticated, function(req,res){
+    log.info("api.create", req.query.subdomain,req.query.service,req.query.opts);
 
 
     function _call(err,stdout,stderr){

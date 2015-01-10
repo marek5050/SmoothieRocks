@@ -75,7 +75,7 @@ function addContainerViewModel(_parent){
                 service: self.service()
             }
 
-            $.get("/api/start", serial, function(response){
+            $.get("/api/create", serial, function(response){
                 if(response === "ok") alert("Service Added");
                 else alert(response);
 
@@ -122,11 +122,22 @@ function containerManagerViewModel(_parent){
     }
 }
 
+
+
+
+
+function dnsManagerViewModel(_parent){
+    console.log("initializing dnsManagerViewModel");
+}
+
+
+
 function Smoothie(){
     var self = this;
     self.name= "Smoothie.Rocks";
     self.addContainerManager = new addContainerViewModel(self);
     self.containerManager = new containerManagerViewModel(self);
+    self.dns_manager = new dnsManagerViewModel(self);
 
     self.refresh = function(){
         self.containerManager.fetchContainers();
