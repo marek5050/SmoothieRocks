@@ -25,10 +25,6 @@ var UserSchema = new Schema({
 
 UserSchema.plugin(findOrCreate);
 
-//UserSchema.statics.findById = function (id, cb) {
-//    this.find({ id: new RegExp(id) }, cb);
-//}
-
 
 module.exports.uatokens = mongoose.model("uatokens", UATokensSchema);
 module.exports.user = mongoose.model( "useraccounts", UserSchema);

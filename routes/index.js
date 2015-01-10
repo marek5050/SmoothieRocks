@@ -7,11 +7,13 @@ var HOST = process.env.HOST;
 
 var winston = require('winston');
 
+
 var log = new (winston.Logger)({
     transports: [
         new (winston.transports.File)({ filename: __dirname + "/../logs/index.log", level:'info', timestamp:true, json:true })
     ]
 });
+
 
 var Dockerfile =  schemas.dockerfile;
 var UATokens   =  schemas.uatokens;
@@ -32,7 +34,6 @@ passport.use(new FacebookStrategy({
         log.info("refreshToken: ", refreshToken);
         log.info("profile: ", profile.emails[0].value);
         log.info("done: ", done);
-
 
         User.findOrCreate( { email: profile.emails[0].value } , function(err, user) {
             //log.info("FOUND USER: ", user);
@@ -84,13 +85,20 @@ router.get("/login", function(req,res){
 
 router.get("/api/list", ensureAuthenticated, function(req,res){
     log.info("/api/list: ", req.user._id);
+    if(!req.user || !req.user._id ){
+        console.log("err");
+        res.send("err");
+        return;
+    }
 
     User.findById(req.user._id, function(err, user ){
 
-        if(err)
-            log.info("Error finding User: ", req.user.id) ;
-        else if(!user){
-            res.redirect("/login");
+        if(err){
+            log.info("Error finding User: ", req.user._id) ;
+            res.send("err");
+            return;
+        }else if(!user){
+            res.send("err");
             return;
         }
 
@@ -193,6 +201,8 @@ router.get('/api/start',ensureAuthenticated, function(req,res){
         User.findById(req.user._id, function(_err, _user) {
                 if (_err) {
                     log.info("ERROR: " + _err);
+                    res.send("err");
+                    return;
                 } else {
                     log.info("Found: " + _user);
 

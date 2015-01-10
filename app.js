@@ -20,6 +20,7 @@ var Db = require('mongodb').Db
 var passport = require('passport');
 
 
+
 var app = express();
 
 mongoose.set('debug',false);
@@ -60,6 +61,7 @@ app.use(function(req, res, next) {
 });
 
 // error handlers
+
 
 // development error handler
 // will print stacktrace
