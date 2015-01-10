@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var dockie = require("../bin/dockie.js");
+var dockie = require(__dirname + "/../bin/dockie.js");
+var schemas = require(__dirname + "/../bin/schemas.js");
 
 var HOST = process.env.HOST;
 
@@ -8,13 +9,13 @@ var winston = require('winston');
 
 var log = new (winston.Logger)({
     transports: [
-        new (winston.transports.File)({ filename: './logs/index.log', level:'info', timestamp:true, json:true })
+        new (winston.transports.File)({ filename: __dirname + "/../logs/index.log", level:'info', timestamp:true, json:true })
     ]
 });
 
-var Dockerfile =  (require("../bin/schemas.js")).dockerfile;
-var UATokens   =  (require("../bin/schemas.js")).uatokens;
-var User       =  (require("../bin/schemas.js")).user;
+var Dockerfile =  schemas.dockerfile;
+var UATokens   =  schemas.uatokens;
+var User       =  schemas.user;
 
 var passport = require('passport')
     , FacebookStrategy = require('passport-facebook').Strategy;
