@@ -88,8 +88,6 @@ function addContainerViewModel(_parent){
 }
 
 
-
-
 function containerManagerViewModel(_parent){
     console.log("initializing containerManager");
 

@@ -2,6 +2,7 @@
   <configuration default="false" name="bin/www" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="/opt/local/bin/node" path-to-js-file="bin/www.js" working-dir="$PROJECT_DIR$">
     <envs>
       <env name="DEBUG" value="SmoothieRocks" />
+      <env name="HOST" value="smoothie.dev" />
     </envs>
     <browser url="http://localhost:3000/" />
     <RunnerSettings RunnerId="Basic" />

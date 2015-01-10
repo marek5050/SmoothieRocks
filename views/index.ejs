@@ -332,7 +332,7 @@
         return img.replace("$NAME", name);
     }
     function subdomainname(name){
-        var host=".smoothie.rocks";
+        var host=".<%=HOST%>";
         return name+host;
     }
 </script>
@@ -364,12 +364,15 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="box-content" style="min-height:120px" data-bind="visible: visible">
+                        <div class="box-content" style="min-height:120px">
 <div class="col-sm-4">
-    <ul>
-        <li>Point your sites A Name DNS to 104.236.102.244</li>
-        <li></li>
-    </ul>
+    <h3>Point your sites A Name DNS to 104.236.102.244</h3>
+</div>
+<div class="col-sm-4">
+    <h3>Point your sites A Name DNS to 104.236.102.244</h3>
+</div>
+<div class="col-sm-4">
+    <h3>Point your sites A Name DNS to 104.236.102.244</h3>
 </div>
                         </div>
                     </div>

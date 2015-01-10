@@ -7,13 +7,11 @@ var HOST = process.env.HOST;
 
 var winston = require('winston');
 
-
 var log = new (winston.Logger)({
     transports: [
         new (winston.transports.File)({ filename: __dirname + "/../logs/index.log", level:'info', timestamp:true, json:true })
     ]
 });
-
 
 var Dockerfile =  schemas.dockerfile;
 var UATokens   =  schemas.uatokens;
@@ -23,7 +21,7 @@ var passport = require('passport')
     , FacebookStrategy = require('passport-facebook').Strategy;
 var FACEBOOK_APP_ID = "298638103625812";
 var FACEBOOK_APP_SECRET = "cb11debfcb20bf0b88ebce48e94e652e";
-var FACEBOOK_HOST = HOST || "localhost:8000";
+var FACEBOOK_HOST = (HOST=="smoothie.dev")? "smoothie.dev:9000" : HOST;
 passport.use(new FacebookStrategy({
       clientID: FACEBOOK_APP_ID,
       clientSecret: FACEBOOK_APP_SECRET,
@@ -36,7 +34,6 @@ passport.use(new FacebookStrategy({
         //log.info("done: ", done);
 
         User.findOrCreate( { email: profile.emails[0].value } , function(err, user) {
-            //log.info("FOUND USER: ", user);
         if (err) {
             return done(err);
         }else{
@@ -71,7 +68,7 @@ router.get('/logout', function(req,res){
 
 /* GET home page. */
 router.get('/',ensureAuthenticated, function(req, res) {
-  res.render('index', { user:req.user});
+  res.render('index', { user:req.user, HOST: HOST});
 });
 
 /* GET home page. */
