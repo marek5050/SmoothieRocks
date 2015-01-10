@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c1bbfe0a-0563-4e52-a9f9-23f7f9636c55" name="Default" comment="Fixed UPSTART silent failure bugs. -&gt; Replae relative paths with __dirname">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/www.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
+    <list default="true" id="c1bbfe0a-0563-4e52-a9f9-23f7f9636c55" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/makefile" afterPath="$PROJECT_DIR$/makefile" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SmoothieRocks.iws" />
@@ -33,8 +32,8 @@
           <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/routes/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.5716511" vertical-offset="203" max-vertical-offset="3990">
-                  <caret line="38" column="45" selection-start-line="38" selection-start-column="45" selection-end-line="38" selection-end-column="45" />
+                <state vertical-scroll-proportion="0.40809968" vertical-offset="203" max-vertical-offset="3990">
+                  <caret line="31" column="4" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="4" />
                   <folding />
                 </state>
               </provider>
@@ -138,7 +137,6 @@
         <option value="$PROJECT_DIR$/views/stops.ejs" />
         <option value="$PROJECT_DIR$/views/stops.ejs copy" />
         <option value="$PROJECT_DIR$/views/stops123.ejs" />
-        <option value="$PROJECT_DIR$/makefile" />
         <option value="$PROJECT_DIR$/bin/www" />
         <option value="$PROJECT_DIR$/bin/dockie.js" />
         <option value="$PROJECT_DIR$/views/index.ejs" />
@@ -148,6 +146,7 @@
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/bin/www.js" />
         <option value="$PROJECT_DIR$/routes/index.js" />
+        <option value="$PROJECT_DIR$/makefile" />
       </list>
     </option>
   </component>
@@ -363,7 +362,13 @@
       <option name="project" value="LOCAL" />
       <updated>1420855828991</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Still trying to fix stuff.">
+      <created>1420856985975</created>
+      <option name="number" value="00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1420856985975</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -416,7 +421,8 @@
     <MESSAGE value="Fixed UPSTART silent failure bugs. -&gt; Replae relative paths with __dirname" />
     <MESSAGE value="Updated gitgnore" />
     <MESSAGE value="Something broke..." />
-    <option name="LAST_COMMIT_MESSAGE" value="Something broke..." />
+    <MESSAGE value="Still trying to fix stuff." />
+    <option name="LAST_COMMIT_MESSAGE" value="Still trying to fix stuff." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -752,14 +758,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="555">
-          <caret line="23" column="22" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bin/dockie.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.91588783" vertical-offset="648" max-vertical-offset="1290">
@@ -841,10 +839,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13740458" vertical-offset="0" max-vertical-offset="655">
+          <caret line="6" column="27" selection-start-line="6" selection-start-column="27" selection-end-line="6" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5716511" vertical-offset="203" max-vertical-offset="3990">
-          <caret line="38" column="45" selection-start-line="38" selection-start-column="45" selection-end-line="38" selection-end-column="45" />
+        <state vertical-scroll-proportion="0.40809968" vertical-offset="203" max-vertical-offset="3990">
+          <caret line="31" column="4" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="4" />
           <folding />
         </state>
       </provider>

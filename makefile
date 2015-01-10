@@ -3,7 +3,9 @@ DOCKFILE:=mbejda/wordpress-wpcli-plugins
 OPTS:=
 _ID:=
 
-default: 
+default:
+	@echo Start node server
+	node ./bin/www.js  -e HOST="smoothie.rocks"
 
 kill_all:
 	docker kill $(docker ps -q)
