@@ -9,6 +9,7 @@ var winston = require('winston');
 
 var log = new (winston.Logger)({
     transports: [
+        new (winston.transports.Console)(),
         new (winston.transports.File)({ filename: __dirname + "/../logs/index.log", level:'info', timestamp:true, json:true })
     ]
 });
@@ -56,6 +57,7 @@ router.get('/auth/facebook',
     passport.authenticate('facebook', { scope: ['read_stream', 'publish_actions'] })
 );
 
+
 router.get('/auth/facebook/callback',
     passport.authenticate('facebook', { successRedirect: '/',
       failureRedirect: '/login' }));
@@ -63,7 +65,7 @@ router.get('/auth/facebook/callback',
 router.get('/logout', function(req,res){
     req.logout();
     res.redirect('/');
-})
+});
 
 
 /* GET home page. */
@@ -110,14 +112,11 @@ router.get("/api/list", ensureAuthenticated, function(req,res){
             }else{
                 //log.info("Found dockerfiles: " , items);
             }
-            //user = user.toObject();
-            //user.items = items;
-            //delete user.dockerFiles;
 
             res.send(items);
         })
     })
-})
+});
 
 /* GET home page. */
 router.get('/creative.html', function(req, res) {
@@ -141,7 +140,7 @@ router.get('/api/remove',ensureAuthenticated, function(req,res) {
     User.findById(req.user._id, function(err, user){
 
 
-     function _call(){
+        function _call() {
          user.save(function(err,user){
                 if(err) {log.info("Error saving user" );}
          });
@@ -159,15 +158,11 @@ router.get('/api/remove',ensureAuthenticated, function(req,res) {
 
         if(err ) log.info("ERROR: " + err);
 
-        //log.info(user);
 
         var idx = user.dockerFiles.indexOf(_id);
 
-        log.info(user.dockerFiles.length);
-
         if(idx!= -1) user.dockerFiles.splice(idx,1);
 
-        log.info(user.dockerFiles.length);
 
         dockie.stopDockfile(_id, _call);
 
@@ -175,6 +170,173 @@ router.get('/api/remove',ensureAuthenticated, function(req,res) {
 
 
 
+});
+
+router.get("/api/container", ensureAuthenticated, function (req, res) {
+    var item = req.query;
+    var u_id = req.user._id;
+
+    console.log("api.container.get:", item._id);
+
+    if (!item) {
+        res.send("err");
+        return;
+    }
+    /**
+     * Need to validate user request... if the user actually owns the
+     * requested container.
+     */
+
+    Dockerfile.findOne({_id: item._id}, function (err, docker) {
+        if (err) {
+            res.send("err");
+            return;
+        }
+        res.send(docker);
+    });
+});
+
+
+router.put("/api/container", ensureAuthenticated, function (req, res) {
+    var item = req.body;
+    var u_id = req.user._id;
+    var d_id = item._id;
+    delete item._id;
+
+    console.log("api.container.put:", item);
+    if (!item) {
+        res.send("err");
+        return;
+    }
+
+    console.log("_ID: " + d_id);
+
+    Dockerfile.findByIdAndUpdate(d_id, {$set: item}, function (err, docker) {
+        console.log("Err: " + err);
+        console.log("Docker: " + docker);
+
+        if (err) {
+            res.send("err");
+            return;
+        }
+        res.send(docker);
+    });
+});
+
+router.put("/api/container/status", ensureAuthenticated, function () {
+
+});
+
+router.post("/api/container", ensureAuthenticated, function (req, res) {
+    var item = req.body;
+    var u_id = req.user._id;
+
+    console.log("api.container.post.", item);
+
+    if (!item) {
+        res.send("err");
+        return;
+    }
+
+    item.opts = item['opts[]'];
+
+    var docker = new Dockerfile(item);
+
+    function _userUpdate(dock_id) {
+        User.findById(u_id, function (err, user) {
+            if (!u_id) {
+                res.send("err");
+                return;
+            }
+            user.dockerFiles.push(dock_id);
+            user.save(function (err) {
+                if (err) {
+                    console.log("User not updated: ", err);
+                    res.send("err");
+                } else {
+                    console.log("User updated");
+                    res.send("ok");
+                }
+            });
+        })
+    }
+
+    function _saveme(err1, err2, stdout) {
+        if (err1) {
+            res.send("err");
+            return;
+        } else {
+            docker_id = err2.replace("\n", "");
+        }
+
+        docker.docker_id = docker_id;
+        docker.save(function (err, newItem) {
+            if (err) {
+                console.log("Error saving: ", err);
+            }
+            if (item) {
+                console.log("Created: ", newItem);
+                _userUpdate(newItem._id);
+            } else {
+                console.log("Couldn't create item", item);
+                res.send("err");
+            }
+        });
+    }
+
+    dockie.run(docker, _saveme);
+});
+
+
+router.get("/api/test", function (req, res) {
+    log.info("api/test " + req.query._id);
+
+
+    var _id = req.query._id;
+    if (!_id) {
+        res.send("err");
+        return;
+    } else {
+        console.log("_ID: ", _id);
+    }
+
+    Dockerfile.findById(_id, function (err, item) {
+        log.info("Returned with: ", typeof item);
+        dockie.run(item);
+
+        function _call(err1, err2, stdout) {
+            console.log(err1, err2, stdout);
+            res.send("ok");
+
+        }
+    });
+});
+
+router.get('/api/edit', ensureAuthenticated, function (req, res) {
+    var _id = req.query._id;
+
+    User.findById(req.user._id, function (_err, _user) {
+        if (_err || !_user || !_user.dockerFiles) {
+            res.send("err0");
+            return;
+        }
+
+
+        var idx = _user.dockerFiles.indexOf(_id);
+        if (idx == -1) {
+            res.send("err1");
+            return;
+        }
+
+
+        Dockerfile.findOne({_id: _id}, function (err, item) {
+            if (_err || !item) {
+                res.send("err2");
+                return;
+            }
+            res.send(item);
+        });
+    });
 });
 
 router.get('/api/create',ensureAuthenticated, function(req,res){
@@ -192,34 +354,34 @@ router.get('/api/create',ensureAuthenticated, function(req,res){
         img.service = req.query.service;
         img.opts = req.query.opts;
         img._id = stdout.substring(stdout.indexOf("\n")+1).trim();
+        img.status = "on";
 
         log.info("Got img: " , img);
 
         User.findById(req.user._id, function(_err, _user) {
                 if (_err) {
-                    log.info("ERROR: " + _err);
+                    console.log("ERROR: " + _err);
                     res.send("err");
-                    return;
+
                 } else {
-                    log.info("Found: " + _user);
+                    console.log("Found: " + _user);
 
                     if (undefined == _user.dockerFiles) _user.dockerFiles = [];
 
 
                     img.save(function(err,item){
                         if(err) {
-                            log.info("There was a problem saving");
+                            console.log("There was a problem saving");
                         }
-                            log.info("ITEM: ", item);
+                        console.log("ITEM: ", item);
                             _user.dockerFiles.push(item.id);
                             _user.save(function (err) {
-                            log.info("ERROR SAVING: ", err);
+                                console.log("ERROR SAVING: ", err);
                             });
                     })
 
             }})
-    };
-
+    }
     var env1 = "\"-e PLUGINS='$PLUGINS'\"";
     env1 = env1.replace("$PLUGINS",req.query.opts.join(";"));
     var vhost = req.query.subdomain +"."+ HOST;
@@ -229,6 +391,33 @@ router.get('/api/create',ensureAuthenticated, function(req,res){
 
     res.send("working..");
 });
+
+
+router.put('/api', ensureAuthenticated, function (req, res) {
+    log.info("api.update", req.body.service);
+
+    var service = JSON.parse(req.body.service);
+    var _id = service._id;
+    delete service._id;
+
+    /*
+     Updates do not work with _id fields in the updating object.
+     */
+
+    Dockerfile.update({_id: _id}, service, function (err, number) {
+        if (err) {
+            console.log("Error updating " + service._id);
+            res.send("err")
+        } else {
+            console.log("Effected " + number);
+            res.send("ok")
+        }
+
+    });
+});
+
+
+
 
 router.get('/api/stop',ensureAuthenticated, function(req,res){
     log.info("api.stop: ", req.query.vhost);
@@ -241,7 +430,40 @@ router.get('/api/status',ensureAuthenticated, function(req,res){
     log.info("api.status ");
 
     var status =   dockie.status();
-    res.render('index', {title: status});
+
+    res.send("ok");
+});
+
+
+router.put('/api/status', ensureAuthenticated, function (req, res) {
+    log.info("api.status,put", req.body.state);
+    var state = req.body.state;
+    var _id = req.body._id;
+
+    function def() {
+
+    }
+
+    switch (state) {
+        case  "start":
+            res.send("start");
+            dockie.start(_id, def);
+            break;
+        case    "stop":
+            //dockie.commit(_id);
+            dockie.stop(_id, def);
+            res.send("stop");
+            break;
+
+        case   "destroy":
+            dockie.destroy(_id, def);
+            res.send("destroy");
+            break;
+
+        default:
+            res.send("err");
+    }
+
 });
 
 

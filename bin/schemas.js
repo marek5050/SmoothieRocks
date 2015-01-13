@@ -12,11 +12,12 @@ var UATokensSchema = new Schema({
 
 
 var dockerFileSchema = new Schema({
-    _id: String,
+    docker_id: String,
     subdomain: String,
     domain: String,
     service: String,
-    opts: String
+    opts: [Schema.Types.Mixed],
+    status: String
 });
 
 var UserSchema = new Schema({
