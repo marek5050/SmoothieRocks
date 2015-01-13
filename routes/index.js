@@ -211,15 +211,57 @@ router.put("/api/container", ensureAuthenticated, function (req, res) {
 
     console.log("_ID: " + d_id);
 
-    Dockerfile.findByIdAndUpdate(d_id, {$set: item}, function (err, docker) {
-        console.log("Err: " + err);
-        console.log("Docker: " + docker);
+    Dockerfile.findByIdAndUpdate(d_id, {$set: item}, {new: false}, function (err, old_docker) {
 
         if (err) {
-            res.send("err");
-            return;
+            console.log("Error updating: " + err);
         }
-        res.send(docker);
+        console.log("OLD: ", old_docker);
+        console.log("NEW: ", item);
+
+        if (item.domain != old_docker.domain) {
+            old_docker.domain = item.domain;
+
+            function _call3(err1, err2, stdout) {
+                console.log(err1, err2, stdout);
+            }
+
+            function _call2() {
+                dockie.run(old_docker, _call3);
+            }
+
+            function _call1() {
+                dockie.commit(old_docker.docker_id, d_id, _call2);
+            }
+
+            dockie.stop(old_docker.docker_id, _call1);
+        }
+    });
+});
+
+router.get("/api/container/commit", ensureAuthenticated, function (req, res) {
+    log.info("api.container.commit.get", req.query);
+    var _id = req.query._id;
+    var u_id = req.user._id;
+
+    Dockerfile.findById(_id, function (err, item) {
+        if (err || !item) {
+            log.info("Couldn't find dockfile: ", _id, err, item);
+        }
+
+        function _call(err1, err2, stdout) {
+            console.log(err1, err2, stdout);
+            item.commited = true;
+            item.save(function (err, item) {
+                if (err) {
+                    res.send("err");
+                } else {
+                    res.send("ok");
+                }
+            })
+        }
+
+        dockie.commit(item.docker_id, item._id, _call);
     });
 });
 
@@ -268,7 +310,7 @@ router.put("/api/container/status", ensureAuthenticated, function (req, res) {
                 break;
 
             case "destroyed":
-                dockie.kill(docker.docker_id, function () {
+                dockie.destroy(docker.docker_id, function () {
                     Dockerfile.findByIdAndRemove(_id, function (err, item) {
                         if (err) {
                             console.log("problems removing: ", err);

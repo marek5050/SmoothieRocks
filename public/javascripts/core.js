@@ -75,7 +75,8 @@ function addContainerViewModel(_parent){
                 domain: "",
                 opts: self.opts(),
                 service: self.service(),
-                status: "running"
+                status: "running",
+                commited: false
             };
 
             $.post("/api/container", service, function (response) {
@@ -178,7 +179,8 @@ function Container(_id) {
             _id: self._id,
             //docker_id: self.docker_id(),
             subdomain: self.subdomain(),
-            domain: self.domain(),
+            domain: self.domain()
+            //commited:false
             //opts: self.opts(),
             //service: self.service()
         };
@@ -227,6 +229,15 @@ function Container(_id) {
         })
     };
 
+    self.commit = function () {
+        $.get("/api/container/commit", {"_id": self._id}, function (data) {
+            if (data == "err") {
+                console.log(data);
+            } else {
+                console.log("Success");
+            }
+        });
+    };
     self.destroy = function () {
         self.setState("destroyed");
     };

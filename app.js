@@ -19,8 +19,6 @@ var Db = require('mongodb').Db
 
 var passport = require('passport');
 
-
-
 var app = express();
 
 mongoose.set('debug',false);

@@ -17,6 +17,7 @@
     "ejs": "^1.0.0",
     "express": "~4.9.0",
     "express-session": "^1.9.3",
+    "grunt": "^0.4.5",
     "jade": "~1.6.0",
     "mongodb": "*",
     "mongoose": "^3.8.21",

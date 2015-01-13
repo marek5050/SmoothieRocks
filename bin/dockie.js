@@ -16,20 +16,21 @@ var log = new (winston.Logger)({
 
 var HOST = process.env.HOST || "smoothie.dev";
 
-
+function replaceAll(find, replace, str) {
+    var find = find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    return str.replace(new RegExp(find, 'g'), replace);
+}
 
 exports.getSub = function(){
     return subDomains[Math.floor(Math.random()*subDomains.length)];
 };
 
-exports.commit = function (_id, vhost, user) {
-    console.log("dockie.start: ", _id);
+exports.commit = function (_id, mongo_id, _call) {
+    console.log("dockie.commit: ", _id);
 
-    var exec_string = "make commit _ID=%ID USER=%USER VHOST=%VHOST";
-    exec_string = exec_string.replace("%ID", _id);
-    exec_string = exec_string.replace("%USER", vhost);
-    exec_string = exec_string.replace("%VHOST", user);
-
+    var exec_string = "docker commit $(_ID) $(MONGO_ID)";
+    exec_string = exec_string.replace("$(_ID)", _id);
+    exec_string = exec_string.replace("$(MONGO_ID)", mongo_id);
 
     function stream(err1, err2, stdout) {
         console.log(exec_string, err1, err2, stdout);
@@ -41,17 +42,25 @@ exports.commit = function (_id, vhost, user) {
     return child;
 };
 
-function wordpressBuild(docker) {
-    var vhost = docker.subdomain;
 
+function wordpressBuild(docker) {
+
+    var vhost = docker.subdomain + "." + HOST;
     if (docker.domain)
-        vhost = "," + docker.domain;
+        vhost = vhost + "," + docker.domain;
+
+
+    var service = docker.service;
+    if (docker.commited) {
+        service = docker._id;
+    }
+
 
     var tmpl = "docker run  -d -e \"VIRTUAL_HOST=$(VHOST)\" -e \"SITEURL=$(SUBDOMAIN)\" -e \"PLUGINS=$(PLUGINS)\" -t $(DOCKFILE)";
-    tmpl = tmpl.replace("$(VHOST)", vhost + "." + HOST);
+    tmpl = tmpl.replace("$(VHOST)", vhost);
     tmpl = tmpl.replace("$(SUBDOMAIN)", docker.subdomain + "." + HOST);
     tmpl = tmpl.replace("$(PLUGINS)", docker.opts.join(";"));
-    tmpl = tmpl.replace("$(DOCKFILE)", docker.service);
+    tmpl = tmpl.replace("$(DOCKFILE)", service);
 
     return tmpl;
 }
@@ -59,6 +68,7 @@ function wordpressBuild(docker) {
 
 exports.run = function (docker, _call) {
     console.log("dockie.run: ", docker);
+
     var exec_string = "";
     if (docker.service.indexOf("wordpress") != -1) {
         exec_string = wordpressBuild(docker);
@@ -156,6 +166,24 @@ exports.kill = function (_id, _call) {
 };
 
 
+exports.destroy = function (_id, _call) {
+    console.log("dockie.destroy", _id);
+
+    var exec_string = "docker kill $(ID);docker rm $(ID); docker rmi $(ID);";
+    exec_string = replaceAll("$(ID)", _id, exec_string);
+
+
+    function stream(err1, err2, stdout) {
+        log.info([exec_string, err1, err2, stdout]);
+        _call(err1, err2, stdout);
+    }
+
+    var child = exec(exec_string, stream);
+
+    return child;
+
+};
+
 exports.startDockfile = function(vhost, dockfile,env1, _call){
     console.log("startDockfile: " , vhost, dockfile );
 
@@ -175,6 +203,7 @@ exports.startDockfile = function(vhost, dockfile,env1, _call){
 
     return child;
 };
+
 
 exports.stopDockfile = function(_id, _call){
 
