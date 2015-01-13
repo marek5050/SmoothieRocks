@@ -50,7 +50,7 @@ function wordpressBuild(docker) {
     var tmpl = "docker run  -d -e \"VIRTUAL_HOST=$(VHOST)\" -e \"SITEURL=$(SUBDOMAIN)\" -e \"PLUGINS=$(PLUGINS)\" -t $(DOCKFILE)";
     tmpl = tmpl.replace("$(VHOST)", vhost + "." + HOST);
     tmpl = tmpl.replace("$(SUBDOMAIN)", docker.subdomain + "." + HOST);
-    tmpl = tmpl.replace("$(PLUGINS)", docker.opts.join(","));
+    tmpl = tmpl.replace("$(PLUGINS)", docker.opts.join(";"));
     tmpl = tmpl.replace("$(DOCKFILE)", docker.service);
 
     return tmpl;
@@ -74,23 +74,11 @@ exports.run = function (docker, _call) {
     return child;
 };
 
-exports.start = function (exec_string, _call) {
+exports.start = function (_id, _call) {
     console.log("dockie.start: ");
 
-    function stream(err1, err2, stdout) {
-        log.info([exec_string, err1, err2, stdout]);
-        _call(err1, err2, stdout);
-    }
-
-    var child = exec(exec_string, null, stream);
-
-    return child;
-};
-
-exports.pause = function (_id, _call) {
-    console.log("dockie.start: ", _id);
-
-    var exec_string = "make pause ID=" + _id;
+    var exec_string = "docker start $(ID)";
+    exec_string = exec_string.replace("$(ID)", _id);
 
     function stream(err1, err2, stdout) {
         log.info([exec_string, err1, err2, stdout]);
@@ -102,10 +90,44 @@ exports.pause = function (_id, _call) {
     return child;
 };
 
+exports.stop = function (_id, _call) {
+    console.log("dockie.stop: ", _id);
+
+    var exec_string = "docker stop $(ID)";
+    exec_string = exec_string.replace("$(ID)", _id);
+
+    function stream(err1, err2, stdout) {
+        log.info([exec_string, err1, err2, stdout]);
+        _call(err1, err2, stdout);
+    }
+
+    var child = exec(exec_string, stream);
+
+    return child;
+};
+
+exports.stop = function (_id, _call) {
+    console.log("dockie.pause: ", _id);
+
+    var exec_string = "docker pause $(ID)";
+    exec_string = exec_string.replace("$(ID)", _id);
+
+    function stream(err1, err2, stdout) {
+        log.info([exec_string, err1, err2, stdout]);
+        _call(err1, err2, stdout);
+    }
+
+    var child = exec(exec_string, stream);
+
+    return child;
+};
+
+
 exports.kill = function (_id, _call) {
     console.log("dockie.kill: ", _id);
 
-    var exec_string = "make kill ID=" + _id;
+    var exec_string = "docker kill $(ID)";
+    exec_string = exec_string.replace("$(ID)", _id);
 
     function stream(err1, err2, stdout) {
         log.info([exec_string, err1, err2, stdout]);

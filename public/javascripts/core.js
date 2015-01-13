@@ -74,7 +74,8 @@ function addContainerViewModel(_parent){
                 subdomain: self.subdomain(),
                 domain: "",
                 opts: self.opts(),
-                service: self.service()
+                service: self.service(),
+                status: "start"
             };
 
             $.post("/api/container", service, function (response) {
@@ -133,21 +134,21 @@ var sample = {
     opts: ["snow", "pw", "puff", "fluff"],
     service: "tutum/wordpress",
     domain: "universe.com",
-    status: "off"
+    status: "start"
 };
 
 function Container(_id) {
     console.log("Creating container ", _id);
 
     var self = this;
-    self._id = _id;
+    self._id = _id || "";
 
     self.docker_id = ko.observable("");
     self.subdomain = ko.observable("");
     self.domain = ko.observable("");
     self.opts = ko.observableArray([]);
     self.service = ko.observable("");
-    self.status = ko.observable();
+    self.status = ko.observable("");
 
     self.load = function () {
         console.log("editManagerViewModel.load", _id);
@@ -197,16 +198,30 @@ function Container(_id) {
         })
     };
     self.setState = function (state) {
+
         $.ajax({
             url: "/api/container/status",
             type: "PUT",
-            data: {_id: _id, status: state},
+            data: {_id: self._id, status: state},
             success: function (response) {
                 console.log(response);
 
-                if (response != "err" && typeof response != "string") {
+                if (response != "err") {
                     console.log("received good");
-                    self.service(new Service(response));
+                    if (state != "destroy")
+                        self.load();
+                    else {
+                        self._id = "";
+                        self.docker_id("");
+                        self.subdomain("");
+                        self.domain("");
+                        self.opts([]);
+                        self.service("");
+                        self.status("");
+                    }
+
+
+                    $("body").trigger("refresh");
                 }
             }
         })
@@ -259,6 +274,8 @@ function Smoothie(){
         console.log("parent.edit");
         self.editContainer.edit(_id);
     };
+
+    $("body").bind("refresh", self.refresh);
 
     self.refresh();
 }

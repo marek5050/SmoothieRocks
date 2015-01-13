@@ -223,8 +223,77 @@ router.put("/api/container", ensureAuthenticated, function (req, res) {
     });
 });
 
-router.put("/api/container/status", ensureAuthenticated, function () {
+router.put("/api/container/status", ensureAuthenticated, function (req, res) {
+    log.info("api.container.status,put", req.body);
+    var status = req.body.status;
+    var _id = req.body._id;
 
+
+    Dockerfile.findById(_id, function (err, docker) {
+
+        function def(err1, err2, stdout) {
+            if (err1) {
+                res.send(err1);
+            } else {
+                docker.status = status;
+                docker.save(function (err, dock) {
+                    if (err) {
+                        res.send("err");
+                    } else {
+                        res.send("ok");
+                    }
+                })
+            }
+        }
+
+        switch (status) {
+            case "start":
+                dockie.start(docker.docker_id, def);
+                break;
+            case "stop":
+                //dockie.commit(_id);
+                dockie.stop(docker.docker_id, def);
+                break;
+            case "pause":
+                dockie.pause(docker.docker_id, def);
+                break;
+
+            case "destroy":
+                dockie.kill(docker.docker_id, function () {
+                    Dockerfile.findByIdAndRemove(_id, function (err, item) {
+                        if (err) {
+                            console.log("problems removing: ", err);
+                            res.send("err");
+                        } else {
+                            console.log("docker removed ", item._id);
+                            User.findById(req.user._id, function (err, user) {
+                                if (err) {
+                                    console.log("problems finding user: ", err);
+                                    res.send("err");
+                                } else {
+                                    var idx = user.dockerFiles.indexOf(_id);
+                                    if (idx != -1)
+                                        user.dockerFiles.splice(idx, 1);
+                                    user.save(function (err) {
+                                        if (err) {
+                                            console.log("problems finding user: ", err);
+                                            res.send("err");
+                                            return;
+                                        }
+                                        console.log("docker removed from user ", user);
+                                        res.send("ok")
+                                    })
+                                }
+                            })
+                        }
+                    })
+                });
+                break;
+
+            default:
+                res.send("err");
+        }
+    });
 });
 
 router.post("/api/container", ensureAuthenticated, function (req, res) {
@@ -434,37 +503,6 @@ router.get('/api/status',ensureAuthenticated, function(req,res){
     res.send("ok");
 });
 
-
-router.put('/api/status', ensureAuthenticated, function (req, res) {
-    log.info("api.status,put", req.body.state);
-    var state = req.body.state;
-    var _id = req.body._id;
-
-    function def() {
-
-    }
-
-    switch (state) {
-        case  "start":
-            res.send("start");
-            dockie.start(_id, def);
-            break;
-        case    "stop":
-            //dockie.commit(_id);
-            dockie.stop(_id, def);
-            res.send("stop");
-            break;
-
-        case   "destroy":
-            dockie.destroy(_id, def);
-            res.send("destroy");
-            break;
-
-        default:
-            res.send("err");
-    }
-
-});
 
 
 function ensureAuthenticated(req, res, next) {

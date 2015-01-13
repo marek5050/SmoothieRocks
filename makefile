@@ -7,6 +7,10 @@ USER:=
 default:
 	@echo Start node server
 
+filter:
+	docker rm $(comm -13 <(docker ps -q | sort) <(docker ps -a -q | sort))
+
+
 kill_all:
 	docker kill $(docker ps -q)
 
