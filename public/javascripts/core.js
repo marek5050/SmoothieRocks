@@ -75,7 +75,7 @@ function addContainerViewModel(_parent){
                 domain: "",
                 opts: self.opts(),
                 service: self.service(),
-                status: "start"
+                status: "running"
             };
 
             $.post("/api/container", service, function (response) {
@@ -134,7 +134,7 @@ var sample = {
     opts: ["snow", "pw", "puff", "fluff"],
     service: "tutum/wordpress",
     domain: "universe.com",
-    status: "start"
+    status: "running"
 };
 
 function Container(_id) {
@@ -167,7 +167,7 @@ function Container(_id) {
                 self.domain(data.domain || "No domain");
                 self.opts(data.opts || []);
                 self.service(data.service || "invalid service");
-                self.status(data.status || "off");
+                self.status(data.status || "");
             }
         })
     };
@@ -176,11 +176,11 @@ function Container(_id) {
         //var json = ko.toJSON(self);
         var container = {
             _id: self._id,
-            docker_id: self.docker_id(),
+            //docker_id: self.docker_id(),
             subdomain: self.subdomain(),
             domain: self.domain(),
-            opts: self.opts(),
-            service: self.service()
+            //opts: self.opts(),
+            //service: self.service()
         };
 
         console.log("editManagerViewModel.save", container);
@@ -208,7 +208,7 @@ function Container(_id) {
 
                 if (response != "err") {
                     console.log("received good");
-                    if (state != "destroy")
+                    if (state != "destroyed")
                         self.load();
                     else {
                         self._id = "";
@@ -228,14 +228,20 @@ function Container(_id) {
     };
 
     self.destroy = function () {
-        self.setState("destroy");
+        self.setState("destroyed");
     };
     self.stop = function () {
-        self.setState("stop");
+        self.setState("stopped");
     };
     self.start = function () {
-        self.setState("start");
+        self.setState("started");
     };
+    self.pause = function () {
+        self.setState("paused");
+    };
+    self.unpause = function () {
+        self.setState("unpaused");
+    }
 }
 
 function editManagerViewModel(_parent) {

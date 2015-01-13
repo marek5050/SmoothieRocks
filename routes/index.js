@@ -224,7 +224,7 @@ router.put("/api/container", ensureAuthenticated, function (req, res) {
 });
 
 router.put("/api/container/status", ensureAuthenticated, function (req, res) {
-    log.info("api.container.status,put", req.body);
+    log.info("api.container.status.put", req.body);
     var status = req.body.status;
     var _id = req.body._id;
 
@@ -235,7 +235,11 @@ router.put("/api/container/status", ensureAuthenticated, function (req, res) {
             if (err1) {
                 res.send(err1);
             } else {
-                docker.status = status;
+                if (status == "started" || status == "unpaused") {
+                    docker.status = "running";
+                } else {
+                    docker.status = status;
+                }
                 docker.save(function (err, dock) {
                     if (err) {
                         res.send("err");
@@ -247,18 +251,23 @@ router.put("/api/container/status", ensureAuthenticated, function (req, res) {
         }
 
         switch (status) {
-            case "start":
+            case "started":
                 dockie.start(docker.docker_id, def);
                 break;
-            case "stop":
+            case "stopped":
                 //dockie.commit(_id);
                 dockie.stop(docker.docker_id, def);
                 break;
-            case "pause":
+
+            case "paused":
                 dockie.pause(docker.docker_id, def);
                 break;
 
-            case "destroy":
+            case "unpaused":
+                dockie.unpause(docker.docker_id, def);
+                break;
+
+            case "destroyed":
                 dockie.kill(docker.docker_id, function () {
                     Dockerfile.findByIdAndRemove(_id, function (err, item) {
                         if (err) {

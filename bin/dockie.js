@@ -106,7 +106,23 @@ exports.stop = function (_id, _call) {
     return child;
 };
 
-exports.stop = function (_id, _call) {
+exports.unpause = function (_id, _call) {
+    console.log("dockie.unpause: ", _id);
+
+    var exec_string = "docker unpause $(ID)";
+    exec_string = exec_string.replace("$(ID)", _id);
+
+    function stream(err1, err2, stdout) {
+        log.info([exec_string, err1, err2, stdout]);
+        _call(err1, err2, stdout);
+    }
+
+    var child = exec(exec_string, stream);
+
+    return child;
+};
+
+exports.pause = function (_id, _call) {
     console.log("dockie.pause: ", _id);
 
     var exec_string = "docker pause $(ID)";

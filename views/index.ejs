@@ -362,9 +362,20 @@
                             <div class="row">
 
                                 <div class="col-sm-12" style="margin:0px 0px 10px 0px">
+                                    <!-- ko if: status()=="running" -->
+                                    <button class="btn btn-large btn-warning" data-bind="click: pause">Pause</button>
+                                    <button class="btn btn-large btn-warning" data-bind="click: stop">Stop</button>
+                                    <!-- /ko -->
+
+                                    <!-- ko if: status()=="paused" -->
+                                    <button class="btn btn-large btn-success" data-bind="click: unpause">Unpause
+                                    </button>
+                                    <!-- /ko -->
+
+                                    <!-- ko if: status()=="stopped" -->
                                     <button class="btn btn-large btn-success" data-bind="click: start">Start</button>
-                                    <button class="btn btn-large btn-danger" data-bind="click: stop">Pause</button>
-                                    <button class="btn btn-large btn-danger" data-bind="click: stop">Stop</button>
+                                    <!-- /ko -->
+
                                     <button class="btn btn-large btn-danger" data-bind="click: destroy">Destroy</button>
                                 </div>
 
