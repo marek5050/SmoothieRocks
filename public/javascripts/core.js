@@ -275,7 +275,6 @@ function editManagerViewModel(_parent) {
 }
 
 
-
 function Smoothie(){
     var self = this;
     self.name= "Smoothie.Rocks";
