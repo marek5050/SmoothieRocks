@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var dockie = require(__dirname + "/../bin/dockie.js");
+
 var schemas = require(__dirname + "/../bin/schemas.js");
 var config = require(__dirname + "/../bin/config.json");
 
-console.log("Hello ", config);
 
 var HOST = config.HOST;
 
@@ -23,13 +23,11 @@ var User       =  schemas.user;
 
 var passport = require('passport')
     , FacebookStrategy = require('passport-facebook').Strategy;
-var FACEBOOK_APP_ID = config.FACEBOOK_APP_ID;
-var FACEBOOK_APP_SECRET = config.FACEBOOK_APP_SECRET;
-var FACEBOOK_HOST = config.FACEBOOK_HOST;
+
 passport.use(new FacebookStrategy({
-      clientID: FACEBOOK_APP_ID,
-      clientSecret: FACEBOOK_APP_SECRET,
-      callbackURL: "http://"+ FACEBOOK_HOST + "/auth/facebook/callback"
+        clientID: config.FACEBOOK_APP_ID,
+        clientSecret: config.FACEBOOK_APP_SECRET,
+        callbackURL: "http://" + config.FACEBOOK_HOST + "/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done) {
         //log.info("accessToken: ", accessToken);
