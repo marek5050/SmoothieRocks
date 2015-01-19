@@ -1,3 +1,4 @@
 node_modules/
-logs/*
+logs/
 bin/www.js
+bin/config.json
