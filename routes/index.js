@@ -2,8 +2,11 @@ var express = require('express');
 var router = express.Router();
 var dockie = require(__dirname + "/../bin/dockie.js");
 var schemas = require(__dirname + "/../bin/schemas.js");
+var config = require(__dirname + "/../bin/config.json");
 
-var HOST = process.env.HOST;
+console.log("Hello ", config);
+
+var HOST = config.HOST;
 
 var winston = require('winston');
 
@@ -20,9 +23,9 @@ var User       =  schemas.user;
 
 var passport = require('passport')
     , FacebookStrategy = require('passport-facebook').Strategy;
-var FACEBOOK_APP_ID = "298638103625812";
-var FACEBOOK_APP_SECRET = "cb11debfcb20bf0b88ebce48e94e652e";
-var FACEBOOK_HOST = (HOST=="smoothie.dev")? "smoothie.dev:9000" : HOST;
+var FACEBOOK_APP_ID = config.FACEBOOK_APP_ID;
+var FACEBOOK_APP_SECRET = config.FACEBOOK_APP_SECRET;
+var FACEBOOK_HOST = config.FACEBOOK_HOST;
 passport.use(new FacebookStrategy({
       clientID: FACEBOOK_APP_ID,
       clientSecret: FACEBOOK_APP_SECRET,

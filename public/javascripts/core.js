@@ -9,10 +9,23 @@ var wordpressPlugins = [
     {name: "Page Builder by SiteOrigin", install: "siteorigin-panels"}
 ];
 
+var rethinkDBPlugins = [
+    {name: "BuddyPress", install: "bbpress"},
+    {name: "WooCommerce", install: "woocommerce"},
+    {name: "All in One SEO Pack", install: "all-in-one-seo-pack"},
+    {name: "Jetpack by WordPress.com", install: "jetpack"},
+    {name: "Jetpack by WordPress.com", install: "jetpack"}
+];
+
 var items = [
-    {name: "wordpress", docker: "mbejda/wordpress-wpcli-plugins" , opts: wordpressPlugins }
-    , {name: "redis", docker: "mbejda/wordpress-wpcli-plugins" , opts: [] }
-    , {name: "mongodb", docker: "mbejda/wordpress-wpcli-plugins" ,opts: [] }
+    {name: "Wordpress", docker: "mbejda/wordpress-wpcli-plugins", opts: wordpressPlugins}
+    , {name: "Ghost", docker: "dockerfile/ghost", opts: []}
+    , {name: "Redis", docker: "mbejda/wordpress-wpcli-plugins", opts: []}
+    //, {name: "RethinkDB", docker: "dockerfile/mongodb" ,opts: [] }
+    , {name: "Mongodb", docker: "dockerfile/mongodb", opts: []}
+    //, {name: "Influxdb", docker: "dockerfile/mongodb" ,opts: [] }
+    //, {name: "Mongodb", docker: "dockerfile/mongodb" ,opts: [] }
+
 ];
 
 var blank = {

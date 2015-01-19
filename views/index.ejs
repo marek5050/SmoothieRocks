@@ -19,6 +19,7 @@
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/css/style.min.css" rel="stylesheet">
     <link href="/assets/css/retina.min.css" rel="stylesheet">
+    <link href="/assets/css/other.css" rel="stylesheet">
     <!-- end: CSS -->
 
 
@@ -71,6 +72,8 @@
         <div id="content" class="col-lg-12 col-sm-12">
 
 
+            <add_container_form></add_container_form>
+            <container_manager></container_manager>
             <edit_container></edit_container>
 
 
@@ -87,103 +90,107 @@
                                 </div>
                             </div>
                             <!-- ko if: service -->
-                        <div class="box-content" style="min-height:120px">
-                            <div class="row">
+                            <div class="box-content" style="min-height:120px">
+                                <div class="row">
 
-                                <div class="col-sm-12" style="margin:0px 0px 10px 0px">
-                                    <!-- ko if: status()=="running" -->
-                                    <button class="btn btn-large btn-warning" data-bind="click: pause">Pause</button>
-                                    <button class="btn btn-large btn-warning" data-bind="click: stop">Stop</button>
-                                    <!-- /ko -->
+                                    <div class="col-sm-12" style="margin:0px 0px 10px 0px">
+                                        <!-- ko if: status()=="running" -->
+                                        <button class="btn btn-large btn-warning" data-bind="click: pause">Pause
+                                        </button>
+                                        <button class="btn btn-large btn-warning" data-bind="click: stop">Stop</button>
+                                        <!-- /ko -->
 
-                                    <!-- ko if: status()=="paused" -->
-                                    <button class="btn btn-large btn-success" data-bind="click: unpause">Unpause
-                                    </button>
-                                    <!-- /ko -->
+                                        <!-- ko if: status()=="paused" -->
+                                        <button class="btn btn-large btn-success" data-bind="click: unpause">Unpause
+                                        </button>
+                                        <!-- /ko -->
 
-                                    <!-- ko if: status()=="stopped" -->
-                                    <button class="btn btn-large btn-success" data-bind="click: start">Start</button>
-                                    <!-- /ko -->
-                                    <button class="btn btn-large btn-danger" data-bind="click: destroy">Destroy</button>
-                                    <!--<button class="btn btn-large btn-success" data-bind="click: commit">Commit</button>-->
-                                </div>
-
-                                <div class="col-sm-4 ">
-
-                                    <div class="form-group">
-                                        <div class="controls">
-                                            <div class="input-group col-sm-12">
-                                                <span class="input-group-addon">Status: </span>
-                                                <input type="text" class="form-control text-right" disabled
-                                                       data-bind="attr:{value:status}, value:status">
-                                            </div>
-                                        </div>
+                                        <!-- ko if: status()=="stopped" -->
+                                        <button class="btn btn-large btn-success" data-bind="click: start">Start
+                                        </button>
+                                        <!-- /ko -->
+                                        <button class="btn btn-large btn-danger" data-bind="click: destroy">Destroy
+                                        </button>
+                                        <!--<button class="btn btn-large btn-success" data-bind="click: commit">Commit</button>-->
                                     </div>
 
+                                    <div class="col-sm-4 ">
 
-                                    <div class="form-group">
-                                        <div class="controls">
-                                            <div class="input-group col-sm-12">
-                                                <span class="input-group-addon">ID: </span>
-                                                <input type="text" class="form-control text-right" disabled
-                                                       data-bind="attr:{value:_id}, value:_id">
+                                        <div class="form-group">
+                                            <div class="controls">
+                                                <div class="input-group col-sm-12">
+                                                    <span class="input-group-addon">Status: </span>
+                                                    <input type="text" class="form-control text-right" disabled
+                                                           data-bind="attr:{value:status}, value:status">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
 
-                                        <div class="controls">
-                                            <div class="input-group col-sm-12">
-                                                <span class="input-group-addon">Subdomain: </span>
-                                                <input type="text" class="form-control text-right"
-                                                       data-bind="attr:{value:subdomain}, value:subdomain" disabled>
-                                                <!--<span class="input-group-addon"><a href="#"><i class="fa fa-cog"-->
-                                                <!--data-bind="click: $parent.toggle"></i></a></span>-->
+
+                                        <div class="fogitrm-group">
+                                            <div class="controls">
+                                                <div class="input-group col-sm-12">
+                                                    <span class="input-group-addon">ID: </span>
+                                                    <input type="text" class="form-control text-right" disabled
+                                                           data-bind="attr:{value:_id}, value:_id">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="form-group">
 
-                                    <div class="form-group">
+                                            <div class="controls">
+                                                <div class="input-group col-sm-12">
+                                                    <span class="input-group-addon">Subdomain: </span>
+                                                    <input type="text" class="form-control text-right"
+                                                           data-bind="attr:{value:subdomain}, value:subdomain" disabled>
+                                                    <!--<span class="input-group-addon"><a href="#"><i class="fa fa-cog"-->
+                                                    <!--data-bind="click: $parent.toggle"></i></a></span>-->
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                        <div class="controls">
-                                            <div class="input-group col-sm-12">
-                                                <span class="input-group-addon">Domain: </span>
-                                                <input type="text" class="form-control text-right"
-                                                       data-bind="attr:{value:domain}, value:domain" disabled>
+                                        <div class="form-group">
+
+                                            <div class="controls">
+                                                <div class="input-group col-sm-12">
+                                                    <span class="input-group-addon">Domain: </span>
+                                                    <input type="text" class="form-control text-right"
+                                                           data-bind="attr:{value:domain}, value:domain" disabled>
                                                 <span class="input-group-addon"><a href="#"><i class="fa fa-cog"
                                                                                                data-bind="click: $parent.toggle"></i></a></span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
 
-                                    <div class="form-group">
+                                        <div class="form-group">
 
-                                        <div class="controls">
-                                            <div class="input-group col-sm-12">
-                                                <span class="input-group-addon">Service: </span>
-                                                <input type="text" class="form-control text-right" disabled
-                                                       data-bind="attr:{value:service}, value: service">
+                                            <div class="controls">
+                                                <div class="input-group col-sm-12">
+                                                    <span class="input-group-addon">Service: </span>
+                                                    <input type="text" class="form-control text-right" disabled
+                                                           data-bind="attr:{value:service}, value: service">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
 
-                                    <div class="form-group">
-                                        <div class="controls">
-                                            <div class="input-group col-sm-12">
-                                                <span class="input-group-addon">Options: </span>
-                                                <input type="text" class="form-control text-right" disabled
-                                                       data-bind="attr:{value:opts}, value: opts">
+                                        <div class="form-group">
+                                            <div class="controls">
+                                                <div class="input-group col-sm-12">
+                                                    <span class="input-group-addon">Options: </span>
+                                                    <input type="text" class="form-control text-right" disabled
+                                                           data-bind="attr:{value:opts}, value: opts">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="actions">
-                                        <button class="btn btn-small btn-success pull-right" data-bind="click: save">
-                                            Save
-                                        </button>
-                                    </div>
+                                        <div class="actions">
+                                            <button class="btn btn-small btn-success pull-right"
+                                                    data-bind="click: save">
+                                                Save
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -193,78 +200,72 @@
                 </div>
             </template>
 
+            <template id="add_container_form_template">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="box">
+                            <div class="box-header" data-original-title="">
+                                <h2><i class="fa fa-user"></i><span class="break"></span>Add Service</h2>
 
+                                <div class="box-icon">
+                                    <a href="#" class="btn-small btn-success btn">
+                                        <button type="button" class="btn btn-success btn-small"
+                                                data-bind="click: addServiceShow">
+                                            New Service
+                                        </button>
+                                    </a>
 
-          <add_container_form > </add_container_form>
+                                    <a href="#" class="btn btn-success btn-small">
+                                        <button type="button" class="btn btn-success btn-small"
+                                                data-bind="click: saveService"> Save
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="box-content" style="min-height:120px;padding:25px;"
+                                 data-bind="visible: visible">
+                                <div class="form-group row">
+                                    <label class="control-label" for="appendedInput">Subdomain</label>
 
-           <template  id="add_container_form_template">
-             <div class="row">
-             <div class="col-lg-12">
-                  <div class="box">
-                      <div class="box-header" data-original-title="">
-                          <h2><i class="fa fa-user"></i><span class="break"></span>Add Service</h2>
-
-                          <div class="box-icon">
-                              <a href="#" class="btn-small btn-success btn">
-                                  <button type="button" class="btn btn-success btn-small"
-                                          data-bind="click: addServiceShow">
-                                      New Service
-                                  </button>
-                              </a>
-
-                              <a href="#" class="btn btn-success btn-small">
-                                  <button type="button" class="btn btn-success btn-small"
-                                          data-bind="click: saveService"> Save
-                                  </button>
-                              </a>
-                          </div>
-                      </div>
-                    <div class="box-content" style="min-height:120px" data-bind="visible: visible">
-                            <div class="form-group">
-                                <label class="control-label" for="appendedInput">Subdomain</label>
-                                <div class="controls">
-
-                                    <div class="input-group">
+                                    <div class="controls">
+                                        <div class="input-group">
                                              <span class="input-group-addon" data-bind="css:{red: !subvalid(), green: subvalid() }">
                                                     <i class="fa"  data-bind="css:{'fa-times-circle': !subvalid(), 'fa-check-circle': subvalid() }" ></i>
                                               </span>
-                                        <input id="appendedInput" class="form-control" size="16" type="text" name="subdomain" data-bind="value:subdomain">
-                                        <span class="input-group-addon">.smoothie.rocks</span>
+                                            <input id="appendedInput" class="form-control" size="16" type="text"
+                                                   name="subdomain" data-bind="value:subdomain">
+                                            <span class="input-group-addon">.smoothie.rocks</span>
+                                        </div>
+                                        <span class="help-block">Where to access the default site or service. NO SPACES OR SPECIAL CHARACTERS</span>
                                     </div>
-                                    <span class="help-block">Where to access the default site or service. NO SPACES OR SPECIAL CHARACTERS</span>
                                 </div>
+                                <div class="form-group row" data-bind="foreach: {data: services, as:'service'} ">
+                                    <div class="col-md-3 pull-left">
+                                        <div class="preview-pane">
+                                            <a data-bind="click: $parent.selectService">
+                                                <img data-bind="attr:{'src' : imagename(service.name) }"
+                                                     class="img-responsive img-rounded img-logo" alt=""/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label">Options</label>
+
+                                    <div class="controls" data-bind="foreach: { data: options, as:'option' }">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" id="inlineCheckbox1"
+                                                   data-bind="attr:{value: option.install},checked: $parent.opts">
+                                            <span data-bind="text: option.name"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
                             </div>
-                        <div class="form-group" style="display:table">
-
-                        <div  data-bind="foreach: {data: services, as:'service'} ">
-                        <div class="col-md-4">
-                        <div class="preview-pane">
-
-                            <a data-bind="click: $parent.selectService">
-                                <img data-bind="attr:{'src' : imagename(service.name) }" class="img-responsive img-centered" alt="" />
-                            </a>
-
-                        </div>
-                        </div>
-                         </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Options</label>
-                            <div class="controls" data-bind="foreach: { data: options, as:'option' }">
-                                <label class="checkbox inline">
-                                    <input type="checkbox" id="inlineCheckbox1" data-bind="attr:{value: option.install},checked: $parent.opts">
-                                    <span data-bind="text: option.name" ></span>
-                                </label>
-                            </div>
-                        </div>
-
-                      </div>
                         </div>
                     </div>
-                  </div>
-</template>
-
-<container_manager ></container_manager>
+                </div>
+            </template>
 
 <template id="container_manager_template">
 <div class="row">

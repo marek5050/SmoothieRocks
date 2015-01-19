@@ -43,41 +43,71 @@ exports.commit = function (_id, mongo_id, _call) {
 };
 
 
-function wordpressBuild(docker) {
-
-    var vhost = docker.subdomain + "." + HOST;
-    if (docker.domain)
-        vhost = vhost + "," + docker.domain;
-
-
+function mongoBuild(docker, exec_string) {
+    console.log("mongoBuild");
     var service = docker.service;
     if (docker.commited) {
         service = docker._id;
     }
 
 
-    var tmpl = "docker run  -d -e \"VIRTUAL_HOST=$(VHOST)\" -e \"SITEURL=$(SUBDOMAIN)\" -e \"PLUGINS=$(PLUGINS)\" -t $(DOCKFILE)";
-    tmpl = tmpl.replace("$(VHOST)", vhost);
+    var tmpl = " $(DOCKFILE) mongod --rest --httpinterface --smallfiles";
+    tmpl = exec_string.replace("$(DOCKFILE)", service);
+
+    return exec_string + tmpl;
+}
+
+
+function wordpressBuild(docker, exec_string) {
+    var service = docker.service;
+
+    if (docker.commited) {
+        service = docker._id;
+    }
+
+
+    var tmpl = " -e \"SITEURL=$(SUBDOMAIN)\" -e \"PLUGINS=$(PLUGINS)\" -t $(DOCKFILE)";
     tmpl = tmpl.replace("$(SUBDOMAIN)", docker.subdomain + "." + HOST);
     tmpl = tmpl.replace("$(PLUGINS)", docker.opts.join(";"));
     tmpl = tmpl.replace("$(DOCKFILE)", service);
 
-    return tmpl;
+    return exec_string + tmpl;
 }
 
 
 exports.run = function (docker, _call) {
+
     console.log("dockie.run: ", docker);
 
-    var exec_string = "";
-    if (docker.service.indexOf("wordpress") != -1) {
-        exec_string = wordpressBuild(docker);
+    var vhost = docker.subdomain + "." + HOST;
+    if (vhost.domain) {
+        vhost += "," + docker.domain;
+    }
+
+    console.log("VHOST: " + vhost);
+
+    var exec_string = 'docker run -d -e "VIRTUAL_HOST=$(VHOST)"';
+    exec_string = exec_string.replace("$(VHOST)", vhost);
+
+    switch (docker.service) {
+        case "mbejda/wordpress-wpcli-plugins":
+            exec_string = wordpressBuild(docker, exec_string);
+            break;
+
+        case "dockerfile/mongodb":
+            console.log("mongodb");
+            exec_string = mongoBuild(docker, exec_string);
+            break;
+        default:
+            console.log("Default");
     }
 
     function stream(err1, err2, stdout) {
         log.info([exec_string, err1, err2, stdout]);
         _call(err1, err2, stdout);
     }
+
+    console.log("EXEC_STINRG: " + exec_string);
 
     var child = exec(exec_string, stream);
 
