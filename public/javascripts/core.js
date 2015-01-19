@@ -18,13 +18,13 @@ var rethinkDBPlugins = [
 ];
 
 var items = [
-    {name: "Wordpress", docker: "mbejda/wordpress-wpcli-plugins", opts: wordpressPlugins}
-    , {name: "Ghost", docker: "dockerfile/ghost", opts: []}
-    , {name: "Redis", docker: "mbejda/wordpress-wpcli-plugins", opts: []}
-    //, {name: "RethinkDB", docker: "dockerfile/mongodb" ,opts: [] }
-    , {name: "Mongodb", docker: "dockerfile/mongodb", opts: []}
-    //, {name: "Influxdb", docker: "dockerfile/mongodb" ,opts: [] }
-    //, {name: "Mongodb", docker: "dockerfile/mongodb" ,opts: [] }
+    {name: "Wordpress", img: "official_wordpress.png", docker: "mbejda/wordpress-wpcli-plugins", opts: wordpressPlugins}
+    , {name: "Ghost", img: "official_ghost.png", docker: "dockerfile/ghost", opts: []}
+    , {name: "Redis", img: "official_redis.png", docker: "mbejda/wordpress-wpcli-plugins", opts: []}
+    //, {name: "RethinkDB",img:"official_wordpress.png", docker: "dockerfile/mongodb" ,opts: [] }
+    , {name: "Mongodb", img: "official_mongodb.png", docker: "dockerfile/mongodb", opts: []}
+    //, {name: "Influxdb",img:"official_wordpress.png", docker: "dockerfile/mongodb" ,opts: [] }
+    //, {name: "Mongodb",img:"official_wordpress.png", docker: "dockerfile/mongodb" ,opts: [] }
 
 ];
 
