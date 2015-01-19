@@ -10,15 +10,8 @@ var session = require('express-session');
 var config = require("./bin/config.json");
 
 
-var MONGOPORT = config.mongo.PORT;
-var MONGOHOST = config.mongo.HOST;
-
 var mongoose = require('mongoose');
-var Db = require('mongodb').Db
-    , Server = require('mongodb').Server
-    , server_config = new Server(MONGOHOST, MONGOPORT, {auto_reconnect: true, native_parser: true})
-    , db = new Db('Smoothie', server_config, {safe:false})
-    , mongoStore = require('connect-mongodb');
+var MongoStore = require('connect-mongodb');
 
 
 var passport = require('passport');
@@ -26,7 +19,7 @@ var passport = require('passport');
 var app = express();
 
 mongoose.set('debug',false);
-mongoose.connect("mongodb://" + MONGOHOST + ":" + MONGOPORT + '/Smoothie');
+mongoose.connect(config.mongo.connectionString + '/Smoothie');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,7 +38,8 @@ app.use(session({cookie:{secure: false, expires: false} ,
     secret: 'keyboard cat1',
     resave: true,
     saveUninitialized:true,
-    store:  new mongoStore({db: db})}));
+    store: new MongoStore({url: config.mongo.connectionString + "/sessions"})
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
