@@ -1,9 +1,10 @@
 var debug = require('debug')('SmoothieRocks');
 var app = require(__dirname + '/../app');
-var config = require("config.json");
+var config = require(__dirname + "/config.json");
 
-app.set('port', config.port || 9000);
 
-var server = app.listen(app.get('port'), function() {
+var server = app.listen(config.PORT, function () {
+
     debug('Express server listening on port ' + server.address().port);
+
 });
