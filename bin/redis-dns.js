@@ -59,10 +59,13 @@ exports.commitRecord = function (service) {
     }
 
     client.del("frontend:" + service.subdomain + "." + HOST);
-    client.rpush(["frontend:" + service.subdomain + "." + HOST, service.docker_id], redis.print);
-    client.rpush(["frontend:" + service.subdomain + "." + HOST, "http://" + inspect.NetworkSettings.IPAddress + ":" + port], redis.print);
-    if (service.domain)
-        client.rpush(["frontend:" + service.domain, "http://" + inspect.NetworkSettings.IPAddress + ":" + port], redis.print);
+    client.rpush(["frontend:" + service.subdomain + "." + HOST, service.docker_id]);
+
+    if (service.domain && service.domain.indexOf(" ") == -1) {
+        client.del("frontend:" + service.domain + "." + HOST);
+        client.rpush(["frontend:" + service.domain, "http://" + inspect.NetworkSettings.IPAddress + ":" + port]);
+    }
+
     //client.lrange(["frontend:" + service.subdomain + "." + HOST, 0, -1], redis.print);
 
 };
