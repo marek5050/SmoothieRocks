@@ -306,9 +306,11 @@
                             <tbody role="alert" aria-live="polite" aria-relevant="all" data-bind="foreach: {data: containers, as:'item'} ">
                             <tr  aria-live="polite" aria-relevant="all" >
                                 <td><span class="label"
-                                          data-bind="text: item.status, css:{'label-success': item.status=='running', 'label-warning': item.status=='paused', 'label-danger': item.status=='stopped' } "></span>
+                                          data-bind="text: item.status, css:{'label-success': item.status=='running', 'label-warning': item.status=='paused', 'label-danger': item.status=='stopped' } ">
+
+                                    </span>
                                 </td>
-                                <td data-bind="text: subdomainname(item.subdomain) + domain"></td>
+                                <td data-bind="text: subdomainname(item.subdomain) + ',' + domain"></td>
                                 <td data-bind="text: item.service"></td>
                                 <td data-bind="text: item.opts"></td>
                                 <td class="center ">

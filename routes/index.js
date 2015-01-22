@@ -217,6 +217,7 @@ router.put("/api/container", ensureAuthenticated, function (req, res) {
 
         if (err) {
             console.log("Error updating: " + err);
+            res.send("err");
         }
         console.log("OLD: ", old_docker);
         console.log("NEW: ", item);
@@ -225,20 +226,21 @@ router.put("/api/container", ensureAuthenticated, function (req, res) {
             old_docker.domain = item.domain;
 
             dns.commitRecord(old_docker);
+            res.send("ok");
 
-            function _call3(err1, err2, stdout) {
-                //console.log(err1, err2, stdout);
-                //dns.commitRevord
-            }
-
-            function _call2() {
-                //dockie.run(old_docker, _call3);
-
-            }
-
-            function _call1() {
-                //dockie.commit(old_docker.docker_id, d_id, _call2);
-            }
+            //function _call3(err1, err2, stdout) {
+            //    //console.log(err1, err2, stdout);
+            //    //dns.commitRevord
+            //}
+            //
+            //function _call2() {
+            //    //dockie.run(old_docker, _call3);
+            //
+            //}
+            //
+            //function _call1() {
+            //    //dockie.commit(old_docker.docker_id, d_id, _call2);
+            //}
 
 
             //dockie.stop(old_docker.docker_id, _call1);
