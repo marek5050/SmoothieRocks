@@ -52,18 +52,20 @@ exports.commitRecord = function (service) {
     var keys = (Object.keys(inspect.Config.ExposedPorts));
     if (keys.indexOf("80/tcp") != -1) {
         port = 80;
-    } else if (keys.indexOf("8080") != -1) {
+    } else if (keys.indexOf("8080/tcp") != -1) {
         port = 8080;
     } else {
         port = (keys[0]).split("/")[0];
     }
 
     client.del("frontend:" + service.subdomain + "." + HOST);
-    client.rpush(["frontend:" + service.subdomain + "." + HOST, service.docker_id]);
+    client.rpush(["frontend:" + service.subdomain + "." + HOST, service.docker_id], redis.print);
+    client.rpush(["frontend:" + service.subdomain, "http://" + inspect.NetworkSettings.IPAddress + ":" + port], redis.print);
 
     if (service.domain && service.domain.indexOf(" ") == -1) {
+        console.log("domain ", ["frontend:" + service.domain, "http://" + inspect.NetworkSettings.IPAddress + ":" + port]);
         client.del("frontend:" + service.domain + "." + HOST);
-        client.rpush(["frontend:" + service.domain, "http://" + inspect.NetworkSettings.IPAddress + ":" + port]);
+        client.rpush(["frontend:" + service.domain, "http://" + inspect.NetworkSettings.IPAddress + ":" + port], redis.print);
     }
 
     //client.lrange(["frontend:" + service.subdomain + "." + HOST, 0, -1], redis.print);
