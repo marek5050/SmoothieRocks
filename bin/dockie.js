@@ -46,7 +46,10 @@ function mongoBuild(docker, exec_string) {
     }
 
 
-    var tmpl = "-P $(DOCKFILE) mongod --rest --httpinterface --smallfiles";
+    //docker run -d -p 27017:27017 -p 28017:28017 -e AUTH=no tutum/mongodb
+
+
+    var tmpl = " -P -e AUTH=no $(DOCKFILE) mongod --rest --httpinterface --smallfiles";
     tmpl = tmpl.replace("$(DOCKFILE)", service);
 
     return exec_string + tmpl;
@@ -102,8 +105,8 @@ exports.run = function (docker, _call) {
             exec_string = wordpressBuild(docker, exec_string);
             break;
 
-        case "dockerfile/mongodb":
-            console.log("mongodb");
+        case "tutum/mongodb":
+            //console.log("mongodb");
             exec_string = mongoBuild(docker, exec_string);
             break;
         case "orchardup/ghost":

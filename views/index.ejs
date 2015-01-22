@@ -77,7 +77,7 @@
 
 
             <template id="edit_container_template">
-                <div class="row" data-bind="with:service">
+                <div class="row" data-bind="with:service" class="edit_container">
                     <div class="col-lg-12">
                         <div class="box">
                             <div class="box-header" data-original-title="">
@@ -126,7 +126,7 @@
                                         </div>
 
 
-                                        <div class="fogitrm-group">
+                                        <div class="form-group">
                                             <div class="controls">
                                                 <div class="input-group col-sm-12">
                                                     <span class="input-group-addon">ID: </span>
@@ -136,7 +136,6 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-
                                             <div class="controls">
                                                 <div class="input-group col-sm-12">
                                                     <span class="input-group-addon">Subdomain: </span>
@@ -155,8 +154,11 @@
                                                     <span class="input-group-addon">Domain: </span>
                                                     <input type="text" class="form-control text-right"
                                                            data-bind="attr:{value:domain}, value:domain" disabled>
-                                                <span class="input-group-addon"><a href="#"><i class="fa fa-cog"
-                                                                                               data-bind="click: $parent.toggle"></i></a></span>
+                                                <span class="input-group-addon">
+                                                    <a href="#">
+                                                        <i class="fa fa-cog" data-bind="click: $parent.toggle"></i>
+                                                    </a>
+                                                </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -186,7 +188,7 @@
 
                                         <div class="actions">
                                             <button class="btn btn-small btn-success pull-right"
-                                                    data-bind="click: save">
+                                                    data-bind="click: save ">
                                                 Save
                                             </button>
                                         </div>
@@ -241,7 +243,8 @@
                                 <div class="form-group row" data-bind="foreach: {data: services, as:'service'} ">
                                     <div class="col-md-3 pull-left">
                                         <div class="preview-pane">
-                                            <a data-bind="click: $parent.selectService">
+                                            <a data-bind="click: $parent.selectService"
+                                               style="width:100%;height:100%;display:block;text-align:center;">
                                                 <img data-bind="attr:{'src' : imagename(service.img) }"
                                                      class="img-responsive img-rounded img-logo" alt=""/>
                                             </a>

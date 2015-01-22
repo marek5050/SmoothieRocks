@@ -62,9 +62,10 @@ exports.commitRecord = function (service) {
     client.rpush(["frontend:" + service.subdomain + "." + HOST, service.docker_id], redis.print);
     client.rpush(["frontend:" + service.subdomain + "." + HOST, "http://" + inspect.NetworkSettings.IPAddress + ":" + port], redis.print);
 
-    if (service.domain && service.domain.indexOf(" ") == -1) {
+    if (service.domain) {
         console.log("domain ", ["frontend:" + service.domain, "http://" + inspect.NetworkSettings.IPAddress + ":" + port]);
         client.del("frontend:" + service.domain + "." + HOST);
+        client.rpush(["frontend:" + service.domain, service.docker_id], redis.print);
         client.rpush(["frontend:" + service.domain, "http://" + inspect.NetworkSettings.IPAddress + ":" + port], redis.print);
     }
 

@@ -22,7 +22,7 @@ var items = [
     , {name: "Ghost", img: "official_ghost.png", docker: "orchardup/ghost", opts: []}
     , {name: "Redis", img: "official_redis.png", docker: "mbejda/wordpress-wpcli-plugins", opts: []}
     //, {name: "RethinkDB",img:"official_wordpress.png", docker: "dockerfile/mongodb" ,opts: [] }
-    , {name: "Mongodb", img: "official_mongodb.png", docker: "dockerfile/mongodb", opts: []}
+    , {name: "Mongodb", img: "official_mongodb.png", docker: "tutum/mongodb", opts: []}
     //, {name: "Influxdb",img:"official_wordpress.png", docker: "dockerfile/mongodb" ,opts: [] }
     //, {name: "Mongodb",img:"official_wordpress.png", docker: "dockerfile/mongodb" ,opts: [] }
 ];
@@ -61,8 +61,18 @@ function addContainerViewModel(_parent){
         return self.subvalid() == true && self.service()!="";
     });
 
-    self.selectService = function(item){
+    self.selectService = function (item, evt) {
         console.log("selectService", item, self);
+        console.log(evt);
+        if (evt.target != "a.select") {
+            evt = $(evt.target).parent();
+        } else {
+            evt = evt.target;
+            console.log("TRUE? " + evt.target == "a.select");
+        }
+
+        $(".selected").removeClass("selected");
+        $(evt).toggleClass("selected");
 
         self.service(item.docker);
         self.options(item.opts);
@@ -186,14 +196,11 @@ function Container(_id) {
     };
 
     self.save = function () {
-        //var json = ko.toJSON(self);
         var container = {
             _id: self._id,
             subdomain: self.subdomain(),
             domain: self.domain()
         };
-
-        console.log("editManagerViewModel.save", container);
 
         $.ajax({
             url: "/api/container",
@@ -201,7 +208,8 @@ function Container(_id) {
             data: container,
             success: function (response) {
                 if (response == "ok") {
-
+                    $("edit_container").find("input").attr("disabled", "true");
+                    $("edit_container").find(".status").html("Saved");
                 }
                 console.log(response);
             }
@@ -269,7 +277,7 @@ function editManagerViewModel(_parent) {
 
     self.service = ko.observable(new Container(sample));
 
-    self.toggle = function (item, button, something) {
+    self.toggle = function (item, button) {
 
         var input = $(button.target).closest("div").find("input");
 
