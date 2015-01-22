@@ -20,7 +20,7 @@ var rethinkDBPlugins = [
 var items = [
     {name: "Wordpress", img: "official_wordpress.png", docker: "mbejda/wordpress-wpcli-plugins", opts: wordpressPlugins}
     , {name: "Ghost", img: "official_ghost.png", docker: "orchardup/ghost", opts: []}
-    , {name: "Redis", img: "official_redis.png", docker: "mbejda/wordpress-wpcli-plugins", opts: []}
+    , {name: "Redis", img: "official_redis.png", docker: "tutum/redis", opts: []}
     //, {name: "RethinkDB",img:"official_wordpress.png", docker: "dockerfile/mongodb" ,opts: [] }
     , {name: "Mongodb", img: "official_mongodb.png", docker: "tutum/mongodb", opts: []}
     //, {name: "Influxdb",img:"official_wordpress.png", docker: "dockerfile/mongodb" ,opts: [] }

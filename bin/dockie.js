@@ -45,11 +45,23 @@ function mongoBuild(docker, exec_string) {
         service = docker._id;
     }
 
-
     //docker run -d -p 27017:27017 -p 28017:28017 -e AUTH=no tutum/mongodb
 
 
     var tmpl = " -P -e AUTH=no $(DOCKFILE) mongod --rest --httpinterface --smallfiles";
+    tmpl = tmpl.replace("$(DOCKFILE)", service);
+
+    return exec_string + tmpl;
+}
+
+function redisBuild(docker, exec_string) {
+    console.log("mongoBuild");
+    var service = docker.service;
+    if (docker.commited) {
+        service = docker._id;
+    }
+
+    var tmpl = " -P -e REDIS_PASS=\"google\" $(DOCKFILE)";
     tmpl = tmpl.replace("$(DOCKFILE)", service);
 
     return exec_string + tmpl;
@@ -112,6 +124,9 @@ exports.run = function (docker, _call) {
         case "orchardup/ghost":
             console.log("ghost");
             exec_string = ghostBuild(docker, exec_string);
+        case "tutum/redis":
+            console.log("redis");
+            exec_string = redisBuild(docker, exec_string);
 
         default:
             console.log("Default");
