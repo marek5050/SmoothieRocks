@@ -189,12 +189,8 @@ function Container(_id) {
         //var json = ko.toJSON(self);
         var container = {
             _id: self._id,
-            //docker_id: self.docker_id(),
             subdomain: self.subdomain(),
             domain: self.domain()
-            //commited:false
-            //opts: self.opts(),
-            //service: self.service()
         };
 
         console.log("editManagerViewModel.save", container);

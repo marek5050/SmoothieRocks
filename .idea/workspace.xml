@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c1bbfe0a-0563-4e52-a9f9-23f7f9636c55" name="Default" comment="Added Auth_pass to Redis_client.">
+    <list default="true" id="c1bbfe0a-0563-4e52-a9f9-23f7f9636c55" name="Default" comment="Testing out the save funct">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/core.js" afterPath="$PROJECT_DIR$/public/javascripts/core.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/login.ejs" afterPath="$PROJECT_DIR$/views/login.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/redis-dns.js" afterPath="$PROJECT_DIR$/bin/redis-dns.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SmoothieRocks.iws" />
@@ -28,7 +27,7 @@
     <favorites_list name="SmoothieRocks" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5308123">
+    <splitter split-orientation="horizontal" split-proportion="0.5385154">
       <split-first>
         <leaf>
           <file leaf-file-name="config.json" pinned="false" current-in-tab="false">
@@ -56,8 +55,8 @@
           <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/routes/index.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.60235643" vertical-offset="7661" max-vertical-offset="8865">
-                  <caret line="538" column="0" selection-start-line="538" selection-start-column="0" selection-end-line="538" selection-end-column="0" />
+                <state vertical-scroll-proportion="0.5581738" vertical-offset="3056" max-vertical-offset="8940">
+                  <caret line="229" column="50" selection-start-line="229" selection-start-column="50" selection-end-line="229" selection-end-column="50" />
                   <folding />
                 </state>
               </provider>
@@ -67,20 +66,32 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="core.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="core.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/public/javascripts/core.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4725">
-                  <caret line="20" column="32" selection-start-line="20" selection-start-column="32" selection-end-line="20" selection-end-column="32" />
+                <state vertical-scroll-proportion="0.3814433" vertical-offset="2726" max-vertical-offset="4665">
+                  <caret line="199" column="0" selection-start-line="199" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="redis-dns.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="index.ejs" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/views/index.ejs">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="-22.958334" vertical-offset="2269" max-vertical-offset="6465">
+                  <caret line="188" column="74" selection-start-line="188" selection-start-column="70" selection-end-line="188" selection-end-column="74" />
+                  <folding>
+                    <marker date="1421711067000" expanded="true" signature="19231:19343" placeholder="..." />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="redis-dns.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/bin/redis-dns.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.5817379" vertical-offset="490" max-vertical-offset="1260">
+                <state vertical-scroll-proportion="0.0" vertical-offset="460" max-vertical-offset="1260">
                   <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
                   <folding />
                 </state>
@@ -90,7 +101,7 @@
           <file leaf-file-name="dockie.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/bin/dockie.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="1191" max-vertical-offset="4980">
+                <state vertical-scroll-proportion="0.0" vertical-offset="966" max-vertical-offset="4980">
                   <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
                   <folding />
                 </state>
@@ -141,13 +152,13 @@
         <option value="$PROJECT_DIR$/views/index.ejs" />
         <option value="$PROJECT_DIR$/public/assets/css/other.css" />
         <option value="$PROJECT_DIR$/README" />
-        <option value="$PROJECT_DIR$/public/javascripts/core.js" />
         <option value="$PROJECT_DIR$/bin/schemas.js" />
         <option value="$PROJECT_DIR$/bin/dockie.js" />
         <option value="$PROJECT_DIR$/bin/config.json" />
         <option value="$PROJECT_DIR$/views/login.ejs" />
         <option value="$PROJECT_DIR$/bin/redis-dns.js" />
         <option value="$PROJECT_DIR$/routes/index.js" />
+        <option value="$PROJECT_DIR$/public/javascripts/core.js" />
       </list>
     </option>
   </component>
@@ -212,7 +223,35 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SmoothieRocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="smoothie" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="routes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SmoothieRocks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="smoothie" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -500,7 +539,13 @@
       <option name="project" value="LOCAL" />
       <updated>1421944977706</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Adding global DNS service on save.">
+      <created>1421950354368</created>
+      <option name="number" value="00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1421950354368</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -590,7 +635,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Fixed Facebook callback." />
     <MESSAGE value="Fixed UPSTART silent failure bugs. -&gt; Replae relative paths with __dirname" />
     <MESSAGE value="Updated gitgnore" />
     <MESSAGE value="Something broke..." />
@@ -615,7 +659,8 @@
     <MESSAGE value="Attaching a Markdown README" />
     <MESSAGE value="Switched over to Hipache and added redis-dns service." />
     <MESSAGE value="Added Auth_pass to Redis_client." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Auth_pass to Redis_client." />
+    <MESSAGE value="Adding global DNS service on save." />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding global DNS service on save." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -805,6 +850,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.29049295" vertical-offset="0" max-vertical-offset="568">
           <caret line="11" column="77830" selection-start-line="11" selection-start-column="77830" selection-end-line="11" selection-end-column="77830" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -897,14 +943,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.344766" vertical-offset="5911" max-vertical-offset="6465">
-          <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/redis/lib/commands.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2535">
@@ -921,14 +959,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/core.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4725">
-          <caret line="20" column="32" selection-start-line="20" selection-start-column="32" selection-end-line="20" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Library/Caches/WebStorm9/extLibs/nodejs-v0.10.30-src/core-modules-sources/lib/child_process.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.77022654" vertical-offset="10984" max-vertical-offset="15645">
@@ -941,14 +971,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3322314" vertical-offset="5949" max-vertical-offset="10845">
           <caret line="412" column="0" selection-start-line="412" selection-start-column="0" selection-end-line="412" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/dockie.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1191" max-vertical-offset="4980">
-          <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -977,14 +999,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/redis-dns.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5817379" vertical-offset="490" max-vertical-offset="1260">
-          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/login.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.75" vertical-offset="105" max-vertical-offset="1710">
@@ -995,10 +1009,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bin/dockie.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1191" max-vertical-offset="4980">
+          <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/index.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-22.958334" vertical-offset="2269" max-vertical-offset="6465">
+          <caret line="188" column="74" selection-start-line="188" selection-start-column="70" selection-end-line="188" selection-end-column="74" />
+          <folding>
+            <marker date="1421711067000" expanded="true" signature="19231:19343" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/redis-dns.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="490" max-vertical-offset="1260">
+          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/core.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3814433" vertical-offset="2726" max-vertical-offset="4665">
+          <caret line="199" column="0" selection-start-line="199" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.60235643" vertical-offset="7661" max-vertical-offset="8865">
-          <caret line="538" column="0" selection-start-line="538" selection-start-column="0" selection-end-line="538" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.5581738" vertical-offset="3056" max-vertical-offset="8940">
+          <caret line="229" column="50" selection-start-line="229" selection-start-column="50" selection-end-line="229" selection-end-column="50" />
           <folding />
         </state>
       </provider>

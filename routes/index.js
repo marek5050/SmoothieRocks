@@ -224,19 +224,24 @@ router.put("/api/container", ensureAuthenticated, function (req, res) {
         if (item.domain != old_docker.domain) {
             old_docker.domain = item.domain;
 
+            dns.commitRecord(old_docker);
+
             function _call3(err1, err2, stdout) {
-                console.log(err1, err2, stdout);
+                //console.log(err1, err2, stdout);
+                //dns.commitRevord
             }
 
             function _call2() {
-                dockie.run(old_docker, _call3);
+                //dockie.run(old_docker, _call3);
+
             }
 
             function _call1() {
-                dockie.commit(old_docker.docker_id, d_id, _call2);
+                //dockie.commit(old_docker.docker_id, d_id, _call2);
             }
 
-            dockie.stop(old_docker.docker_id, _call1);
+
+            //dockie.stop(old_docker.docker_id, _call1);
         }
     });
 });
