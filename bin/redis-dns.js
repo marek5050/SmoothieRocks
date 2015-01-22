@@ -55,7 +55,7 @@ exports.commitRecord = function (service) {
     } else if (keys.indexOf("8080") != -1) {
         port = 8080;
     } else {
-        port = keys[0];
+        port = (keys[0]).split("/")[0];
     }
 
     client.del("frontend:" + service.subdomain + "." + HOST);
