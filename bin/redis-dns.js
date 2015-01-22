@@ -5,7 +5,7 @@
 var winston = require('winston');
 var config = require(__dirname + "/config.json");
 var redis = require("redis"),
-    client = redis.createClient(config.redis.PORT, config.redis.HOST, {});
+    client = redis.createClient(config.redis.PORT, config.redis.HOST, {auth_pass: config.redis.PASS});
 
 var HOST = config.HOST;
 
