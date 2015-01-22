@@ -61,19 +61,12 @@ exports.commitRecord = function (service) {
     client.del("frontend:" + service.subdomain + "." + HOST);
     client.rpush(["frontend:" + service.subdomain + "." + HOST, service.docker_id], redis.print);
     client.rpush(["frontend:" + service.subdomain + "." + HOST, "http://" + inspect.NetworkSettings.IPAddress + ":" + port], redis.print);
-    client.lrange(["frontend:" + service.subdomain + "." + HOST, 0, -1], redis.print);
+    if (service.domain)
+        client.rpush(["frontend:" + service.domain, "http://" + inspect.NetworkSettings.IPAddress + ":" + port], redis.print);
+    //client.lrange(["frontend:" + service.subdomain + "." + HOST, 0, -1], redis.print);
 
-    //log.info(client.hdel);
-    //client.hdel(["hash key", "hashtest 1"],redis.print);
-    //client.del(["string key"], redis.print);
-    //
-    //client.hkeys("hash key", function (err, replies) {
-    //    console.log(replies.length + " replies:");
-    //    replies.forEach(function (reply, i) {
-    //        console.log("    " + i + ": " + reply);
-    //    });
-    //});
 };
+
 //var dockerfile = {
 //    d_id:"Snogger",
 //    subdomain: "a.smoothie.dev",

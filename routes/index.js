@@ -547,9 +547,9 @@ router.put('/api', ensureAuthenticated, function (req, res) {
             res.send("err")
         } else {
             console.log("Effected " + number);
+            dns.commitRecord(service);
             res.send("ok")
         }
-
     });
 });
 
