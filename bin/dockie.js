@@ -4,8 +4,7 @@
 
 var exec = require('child_process').exec;
 var winston = require('winston');
-
-var subDomains = ["alpha","beta","charlie","one","two","three","four"];
+var config;
 
 var log = new (winston.Logger)({
     transports: [
@@ -20,10 +19,6 @@ function replaceAll(find, replace, str) {
     var find = find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     return str.replace(new RegExp(find, 'g'), replace);
 }
-
-exports.getSub = function(){
-    return subDomains[Math.floor(Math.random()*subDomains.length)];
-};
 
 exports.commit = function (_id, mongo_id, _call) {
     console.log("dockie.commit: ", _id);
@@ -51,8 +46,8 @@ function mongoBuild(docker, exec_string) {
     }
 
 
-    var tmpl = " $(DOCKFILE) mongod --rest --httpinterface --smallfiles";
-    tmpl = exec_string.replace("$(DOCKFILE)", service);
+    var tmpl = "-P $(DOCKFILE) mongod --rest --httpinterface --smallfiles";
+    tmpl = tmpl.replace("$(DOCKFILE)", service);
 
     return exec_string + tmpl;
 }
@@ -65,7 +60,6 @@ function wordpressBuild(docker, exec_string) {
         service = docker._id;
     }
 
-
     var tmpl = " -e \"SITEURL=$(SUBDOMAIN)\" -e \"PLUGINS=$(PLUGINS)\" -t $(DOCKFILE)";
     tmpl = tmpl.replace("$(SUBDOMAIN)", docker.subdomain + "." + HOST);
     tmpl = tmpl.replace("$(PLUGINS)", docker.opts.join(";"));
@@ -74,10 +68,24 @@ function wordpressBuild(docker, exec_string) {
     return exec_string + tmpl;
 }
 
+function ghostBuild(docker, exec_string) {
+    var service = docker.service;
+
+    if (docker.commited) {
+        service = docker._id;
+    }
+
+    var tmpl = " -e \"GHOST_URL=http://$(DOMAIN)\" -t $(DOCKFILE)";
+    tmpl = tmpl.replace("$(DOMAIN)", docker.subdomain + "." + HOST);
+    tmpl = tmpl.replace("$(DOCKFILE)", service);
+
+    return exec_string + tmpl;
+}
+
 
 exports.run = function (docker, _call) {
 
-    console.log("dockie.run: ", docker);
+    console.log("dockie.run: ", docker.subdomain);
 
     var vhost = docker.subdomain + "." + HOST;
     if (vhost.domain) {
@@ -98,6 +106,10 @@ exports.run = function (docker, _call) {
             console.log("mongodb");
             exec_string = mongoBuild(docker, exec_string);
             break;
+        case "orchardup/ghost":
+            console.log("ghost");
+            exec_string = ghostBuild(docker, exec_string);
+
         default:
             console.log("Default");
     }
@@ -249,9 +261,33 @@ exports.stopDockfile = function(_id, _call){
     return child;
 
 };
+exports.inspect = function (d_id, _call) {
 
+    exec("docker inspect " + d_id, function (err, stdout, stderr) {
+        console.log("stdout Status: " + stdout);
+        console.log("stderr Status: " + stderr);
+        if (err != null) {
+            console.log("Error Status: " + err);
+        } else {
+            _call(d_id, stdout);
+        }
+    });
+};
 
-exports.status = function(){
+exports.getIP = function (d_id, _call) {
+
+    //docker inspect --format '{{ .NetworkSettings.IPAddress }}' 635b0cef7be9
+    exec("docker inspect --format '{{ .NetworkSettings.IPAddress }}' " + d_id, function (err, stdout, stderr) {
+        console.log("stdout Status: " + stdout);
+        console.log("stderr Status: " + stderr);
+        if (err != null) {
+            console.log("Error Status: " + err);
+        } else {
+            _call(stdout);
+        }
+    });
+};
+exports.status = function (_call) {
     console.log("api.status");
 
     var child = exec("$(boot2docker shellinit); make status", function(err,stdout,stderr){

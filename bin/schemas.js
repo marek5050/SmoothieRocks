@@ -18,7 +18,8 @@ var dockerFileSchema = new Schema({
     service: String,
     opts: [Schema.Types.Mixed],
     status: String,
-    commited: {type: Boolean, default: false}
+    commited: {type: Boolean, default: false},
+    inspect: Schema.Types.Mixed
 });
 
 var UserSchema = new Schema({

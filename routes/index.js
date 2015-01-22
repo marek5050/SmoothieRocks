@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var dockie = require(__dirname + "/../bin/dockie.js");
+var dns = require(__dirname + "/../bin/redis-dns.js");
 
 var schemas = require(__dirname + "/../bin/schemas.js");
 var config = require(__dirname + "/../bin/config.json");
@@ -363,41 +364,37 @@ router.post("/api/container", ensureAuthenticated, function (req, res) {
 
     var docker = new Dockerfile(item);
 
-    function _userUpdate(dock_id) {
+    function _userUpdate(docker) {
         User.findById(u_id, function (err, user) {
             if (!u_id) {
                 res.send("err");
                 return;
             }
-            user.dockerFiles.push(dock_id);
+            user.dockerFiles.push(docker._id);
             user.save(function (err) {
                 if (err) {
                     console.log("User not updated: ", err);
                     res.send("err");
                 } else {
                     console.log("User updated");
+                    dns.commitRecord(docker);
                     res.send("ok");
                 }
             });
         })
     }
 
-    function _saveme(err1, err2, stdout) {
-        if (err1) {
-            res.send("err");
-            return;
-        } else {
-            docker_id = err2.replace("\n", "");
-        }
+    function _saveme(docker_id, __inspect) {
 
         docker.docker_id = docker_id;
+        docker.inspect = __inspect;
         docker.save(function (err, newItem) {
             if (err) {
                 console.log("Error saving: ", err);
             }
             if (item) {
-                console.log("Created: ", newItem);
-                _userUpdate(newItem._id);
+                //console.log("Created: ", newItem);
+                _userUpdate(newItem);
             } else {
                 console.log("Couldn't create item", item);
                 res.send("err");
@@ -405,7 +402,18 @@ router.post("/api/container", ensureAuthenticated, function (req, res) {
         });
     }
 
-    dockie.run(docker, _saveme);
+    function _inspect(err1, err2, stdout) {
+        if (err1) {
+            res.send("err");
+            return;
+        } else {
+            docker_id = err2.replace("\n", "");
+        }
+
+        dockie.inspect(docker_id, _saveme);
+    }
+
+    dockie.run(docker, _inspect);
 });
 
 
@@ -464,18 +472,14 @@ router.get('/api/create',ensureAuthenticated, function(req,res){
     log.info("api.create", req.query.subdomain,req.query.service,req.query.opts);
 
 
-    function _call(err,stdout,stderr){
-        if(err!=null) {
-            log.info("Error2: " + err);
-            log.info("STDERR2: " + stderr);
-        }
-
+    function _call2(err, inspect) {
         var img  = new Dockerfile();
         img.subdomain = req.query.subdomain;
         img.service = req.query.service;
         img.opts = req.query.opts;
         img._id = stdout.substring(stdout.indexOf("\n")+1).trim();
         img.status = "on";
+        img.inspect = inspect;
 
         log.info("Got img: " , img);
 
@@ -489,6 +493,7 @@ router.get('/api/create',ensureAuthenticated, function(req,res){
 
                     if (undefined == _user.dockerFiles) _user.dockerFiles = [];
 
+                    dns.commitRecord(img);
 
                     img.save(function(err,item){
                         if(err) {
@@ -503,6 +508,17 @@ router.get('/api/create',ensureAuthenticated, function(req,res){
 
             }})
     }
+
+    function _call(err, stdout, stderr) {
+        if (err != null) {
+            log.info("Error2: " + err);
+            log.info("STDERR2: " + stderr);
+        }
+        dockie.inspect(img, _call2);
+    }
+
+
+
     var env1 = "\"-e PLUGINS='$PLUGINS'\"";
     env1 = env1.replace("$PLUGINS",req.query.opts.join(";"));
     var vhost = req.query.subdomain +"."+ HOST;
