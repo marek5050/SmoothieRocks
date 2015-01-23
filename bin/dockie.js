@@ -124,9 +124,12 @@ exports.run = function (docker, _call) {
         case "orchardup/ghost":
             console.log("ghost");
             exec_string = ghostBuild(docker, exec_string);
+            break;
+
         case "tutum/redis":
             console.log("redis");
             exec_string = redisBuild(docker, exec_string);
+            break;
 
         default:
             console.log("Default");

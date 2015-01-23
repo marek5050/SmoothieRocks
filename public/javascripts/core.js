@@ -63,17 +63,19 @@ function addContainerViewModel(_parent){
 
     self.selectService = function (item, evt) {
         console.log("selectService", item, self);
-        console.log(evt);
-        if (evt.target != "a.select") {
-            evt = $(evt.target).parent();
-        } else {
-            evt = evt.target;
-            console.log("TRUE? " + evt.target == "a.select");
+
+        if (evt && evt.target) {
+
+            if (evt.target != "a.select") {
+                evt = $(evt.target).parent();
+            } else {
+                evt = evt.target;
+                console.log("TRUE? " + evt.target == "a.select");
+            }
+
+            $(".selected").removeClass("selected");
+            $(evt).toggleClass("selected");
         }
-
-        $(".selected").removeClass("selected");
-        $(evt).toggleClass("selected");
-
         self.service(item.docker);
         self.options(item.opts);
     };
@@ -83,7 +85,6 @@ function addContainerViewModel(_parent){
 
         self.visible(!self.visible());
     };
-
 
     self.saveService = function(){
         console.log("addService", this, this.valid());
