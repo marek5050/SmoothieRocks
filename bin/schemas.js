@@ -23,7 +23,8 @@ var dockerFileSchema = new Schema({
 });
 
 var UserSchema = new Schema({
-    email: String
+    f_id: String
+    , profile: Schema.Types.Mixed
     ,dockerFiles:[]
 });
 

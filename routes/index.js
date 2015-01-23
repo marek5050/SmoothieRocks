@@ -35,11 +35,18 @@ passport.use(new FacebookStrategy({
         //log.info("refreshToken: ", refreshToken);
         //log.info("profile: ", profile.emails[0].value);
         //log.info("done: ", done);
+        console.log("profile: ", profile);
 
-        User.findOrCreate( { email: profile.emails[0].value } , function(err, user) {
+        User.findOrCreate({f_id: profile.id}, function (err, user, created) {
+
         if (err) {
             return done(err);
-        }else{
+        } else if (created) {
+            user.profile = profile;
+            user.save(function (err, item) {
+                return done(null, user);
+            })
+        } else {
             return done(null, user);
         }
       });
